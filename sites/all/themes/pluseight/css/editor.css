@@ -1,0 +1,59 @@
+/* Pluseight TinyMCE Editor CSS */
+body {
+    font-size: 14px;
+	color: #454545;
+    line-height: 1.4;
+	font-family: arial, helvetica, sans-serif;
+}
+.floatleft {
+	float: left;
+	margin: 0 20px 10px 0;
+}
+.floatright {
+	float: right;
+	margin: 0 0 10px 20px;
+}
+hr {
+	clear: both;
+	border: 1px solid #ccc;
+	height: 1px;
+	margin: 5px 0 20px 0;
+}
+a, a:link, a:visited, li a.active {
+	color: #C8451E;
+	text-decoration: none;
+}
+p {
+	margin: 0.8em 0;
+}
+h2 {
+	font-size: 1.2857em; /* 18px @ 14px */
+}
+h3 {
+	font-size: 1.4285em; /* 20px @ 14px */
+}
+.btn a, a.btn {
+	display: inline-block;
+	font-weight: bold;
+	background-color: #3780a9;
+	color: #fff;
+	padding: 0.5em;
+	margin-top: 20px;
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+	border-radius: 20px;
+	-khtml-border-radius: 20px;
+	color: #fff;
+	padding: 5px 10px;
+	font-family: BenguiatGothicStd-Bold;
+	background-color: #152f19;
+	font-size: 1.1428em /* 16px @ 14px */
+}
+li.pdf-icon a, span.file {
+	background: url('../images/download_icon.png') no-repeat 0 0;
+	padding: 0 0 10px 30px;
+	display: block
+}
+#region-content .content ul li.pdf-icon {
+	list-style: none;
+}

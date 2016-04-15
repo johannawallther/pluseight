@@ -1,0 +1,28 @@
+/* This file will hold styles that are loaded using the same media query as the normal grid. */
+/* If you are using the default media queries provided by Omega, these styles will also
+ *  apply to the widescreen layout unless they are overridden by the widescreen styles. */
+ 
+.logo-img img {
+	width: auto;
+}
+h1.site-name, h2.site-name {
+	font-size: 2.2857em; /*32px @ 14px*/
+}
+ul.nice-menu-down li,
+ul.nice-menu-down li.menuparent,
+ul.nice-menu-down li.menuparent:hover {
+	padding: 0 1em;
+}
+.view-carousels .view-header h2 {
+	font-size: 2em /*28px @14px*/;
+}
+.front .view-carousels .view-header {
+    width: 420px;
+    height: auto;
+	padding: 40px 20px;
+    left: 20px;
+    top: 20px;
+}
+.front table {
+	margin: 20px;
+}

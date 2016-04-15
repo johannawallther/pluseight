@@ -1,0 +1,32 @@
+/* This file will hold styles that are loaded using the same media query as the narrow grid. */
+/* If you are using the default media queries provided by Omega, these styles will also
+ *  apply to the normal and widescreen layouts. You may override these styles in the normal 
+ *  and widescreen CSS files as appropriate. */
+ 
+.logo-img img {
+	width: 220px;
+}
+h1.site-name, h2.site-name {
+	font-size: 2em; /*28px @ 14px*/
+}
+ul.nice-menu-down li,
+ul.nice-menu-down li.menuparent,
+ul.nice-menu-down li.menuparent:hover {
+	padding: 0 0.5em;
+}
+ul.nice-menu-down .menuparent a {
+  padding-right: 10px;
+}
+.view-carousels .view-header h2 {
+	font-size: 1.2857em /*18px @14px*/;
+}
+.view-carousels .view-header {
+    width: 320px;
+    height: auto;
+	padding: 20px;
+    left: 10px;
+    top: 10px;
+}
+.front table {
+	margin: 10px;
+}

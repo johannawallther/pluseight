@@ -1,0 +1,111 @@
+// main: style.less
+/**
+ * Variable Overrides.
+ *
+ * Modify this file to override the Bootstrap Framework variables. You can copy
+ * these variables directly from ../bootstrap/less/variables.less to this file.
+ */
+
+// Set the proper directory for the Bootstrap Glyphicon font.
+@icon-font-path: '../bootstrap/fonts/';
+
+@brand-primary:         #0298d8;
+@brand-success:         #1b326d;
+@brand-info:             #d7d4d5;
+@link-hover-decoration: none;
+
+@navbar-default-color:             #fff;
+@navbar-default-bg:                @brand-primary;
+@navbar-default-border:            @navbar-default-bg;
+@navbar-default-link-color:                #fff;
+@navbar-default-link-hover-color:          @brand-success;
+@navbar-default-link-active-color:         @brand-success;
+@navbar-default-link-active-bg:            transparent;
+
+.navbar-header {
+    width: 100%;
+}
+.language-link {
+  display: none;
+}
+.view-hp-carousel .view-footer {
+  position: absolute;
+  bottom: 100px;
+  left: 320px;
+  width: 45%;
+  text-align: center;
+}
+.view-hp-carousel .carousel img{
+  opacity: 0.3;
+}
+.header-background {
+  background-image: url('../images/example_img1_1200x465.jpg');
+}
+#page-header .header-background, .header-frost {
+  margin-top:-13px;
+  margin-bottom:15px;
+  background-size: cover;
+  background-position-y: center;
+  padding-top:13px;
+  height: 500px;
+  width: 100%;
+}
+.header-frost {
+  background-color: #eee;
+  opacity: 0.7;
+  position: absolute;
+  top: 94px;
+}
+#page-header .container {
+  margin-top: -470px;
+  padding-bottom: 72px;
+}
+.region-header .block {
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+  padding: 0 200px;
+}
+.view-aktuellt .carousel {
+  padding-top: 15px;
+}
+.main-container img,
+.carousel-control {
+  .img-rounded;
+  .img-responsive;
+}
+.main-container .block-block img {
+  .center-block;
+}
+.main-container .block-block p {
+    .text-center;
+}
+.view-hp-carousel .view-footer .lead {
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+}
+.footer {
+  background-color: @brand-info;
+  .container-fluid;
+}
+.footer .block,
+.region-sidebar-first .block {
+    display: inline-block;
+}
+.footer .block {
+    width: auto;
+}
+.region-sidebar-first .block {
+    width: 100%;
+    .well;
+    border-top: 3px solid @brand-primary;
+}
+table {
+    width: 100%;
+    .text-center;
+}
+.region-footer {
+  .text-center;
+}
+.views-bootstrap-grid-plugin-style .col {
+  padding-bottom: 20px;
+}
