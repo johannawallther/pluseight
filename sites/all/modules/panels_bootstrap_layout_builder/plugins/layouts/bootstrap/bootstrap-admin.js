@@ -1,5 +1,4 @@
 (function ($) {
-
   Drupal.bootstrap = Drupal.bootstrap || {};
 
   Drupal.bootstrap.classSelectors = [];
@@ -23,6 +22,36 @@
           return false;
         });
 
+      // Show/hide Define column size button
+      $('.bootstrap-class-selector button.size-toggle').click(function() {
+        $(this).toggleClass('active');        
+        $(this).parent().find('.size-selector').toggleClass('hide active');
+        $(this).parent().find('.ordering-selector').addClass('hide');
+        $(this).parent().find('.offset-selector').addClass('hide');        
+        $(this).parent().find('.ordering-toggle').removeClass('active');
+        $(this).parent().find('.offset-toggle').removeClass('active');                  
+      });
+
+      // Show/hide Define column ordering button
+      $('.bootstrap-class-selector button.ordering-toggle').click(function() {
+        $(this).toggleClass('active');
+        $(this).parent().find('.ordering-selector').toggleClass('hide');
+        $(this).parent().find('.size-selector').addClass('hide');
+        $(this).parent().find('.offset-selector').addClass('hide');        
+        $(this).parent().find('.size-toggle').removeClass('active');
+        $(this).parent().find('.offset-toggle').removeClass('active');                                              
+      });
+
+      // Show/hide Define column offset button
+      $('.bootstrap-class-selector button.offset-toggle').click(function() {
+        $(this).toggleClass('active');
+        $(this).parent().find('.offset-selector').toggleClass('hide');
+        $(this).parent().find('.size-selector').addClass('hide');
+        $(this).parent().find('.ordering-selector').addClass('hide');        
+        $(this).parent().find('.size-toggle').removeClass('active');
+        $(this).parent().find('.ordering-toggle').removeClass('active');                                             
+      });
+      
       // Window splitter behavior.
       $('div.bootstrap-class-selector:not(.bootstrap-class-selector-processed)')
         .addClass('bootstrap-class-selector-processed')
@@ -35,28 +64,52 @@
 
   Drupal.bootstrap.classSelector = function($classSelector) {
     var $this = this;
-    var $selectorFor = $("#"+$classSelector.attr('data-for'));
-    $classSelector.bind('change',function(){
-      Drupal.bootstrap.removeClasses($selectorFor);
-      $selectorFor.addClass($classSelector.val());
-      Drupal.ajax['bootstrap-class-selector-ajax'].options.data = {
-        'item': $classSelector.attr('data-for-id'),
-        'bootstrap_class': $classSelector.val()
-      };
-      jQuery('.panel-bootstrap-edit-layout').trigger('updateBootstrapClass');
+    $classSelector.each(function(){
+      var $selectorFor = $("#"+$(this).attr('data-for'));
+      var screenSize = $(this).attr('data-screen-size');
+      var dataType = $(this).attr('data-type');
+      $(this).bind('change',function(){
+        var dataId = $(this).attr('data-for-id');
+        var bootstrapClass = '';        
+        Drupal.bootstrap.removeClasses($selectorFor,screenSize,dataType);
+        $selectorFor.find("select[data-screen-size='"+screenSize+"']").each(function() {
+          if(dataId == $(this).attr('data-for-id')) {
+            bootstrapClass += $(this).val()+' ';
+          }
+        });
+        $selectorFor.addClass($(this).val());
+        bootstrapClass = bootstrapClass.trim();
+        Drupal.ajax['bootstrap-class-selector-ajax'].options.data = {
+          'item': $(this).attr('data-for-id'),
+          'bootstrap_class': bootstrapClass,
+          'bootstrap_screen': $(this).attr('data-screen-size')
+        };
+        jQuery('.panel-bootstrap-edit-layout').trigger('updateBootstrapClass');
+      });
     })
   }
 
-  Drupal.bootstrap.removeClasses = function($row){
-     $row.removeClass(function() { /* Matches even table-col-row */
-       var classesToRemove = '',
-       classes = this.className.split(' ');
-       for(var i = 0; i < classes.length; i++ ) {
-           if( /span\d{1,3}/.test( classes[i] ) ) { /* Filters */
-               classesToRemove += classes[i] + ' ';
-           }
-       }
-       return classesToRemove ; /* Returns all classes to be removed */
+  Drupal.bootstrap.removeClasses = function($row,screenSize,dataType){
+      $row.removeClass(function() { /* Matches even table-col-row */
+        var classesToRemove = '',
+        classes = this.className.split(' ');
+        switch(dataType) {
+            case 'size':
+              regex = new RegExp('col-'+screenSize+'-[0-9]');
+              break;
+            case 'ordering':
+              regex = new RegExp('col-'+screenSize+'-pu');
+              break;
+            case 'offset':
+              regex = new RegExp('col-'+screenSize+'-offset');
+              break;
+        }        
+        for(var i = 0; i < classes.length; i++ ) {
+          if(regex.test(classes[i])) { /* Filters */
+            classesToRemove += classes[i] + ' ';
+          }
+        }
+        return classesToRemove ; /* Returns all classes to be removed */
     });
   }
 

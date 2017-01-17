@@ -1,3 +1,9 @@
+html{
+  font-size: inherit !important;
+}
+.container-full { 
+	padding: 0 15px; 
+}
 
 #panels-dnd-main .panel-bootstrap-edit-layout div.panels-display .pane-add-link,
 .panel-bootstrap-edit-layout .panel-pane {
@@ -5,7 +11,7 @@
 }
 
 
-.panel-bootstrap-edit-layout [class*="span"] {
+.panel-bootstrap-edit-layout [class*="col"] {
     background-color: #EEEEEE;
     border-radius: 3px 3px 3px 3px;
     line-height: 40px;
@@ -14,42 +20,50 @@
     margin-bottom: 5px;
 }
 
-.panel-bootstrap-edit-layout [class*="span"] [class*="span"] {
+.panel-bootstrap-edit-layout [class*="col"] [class*="col"] {
     background-color: #CCCCCC;
 }
 
-.panel-bootstrap-edit-layout [class*="span"] [class*="span"] [class*="span"] {
+.panel-bootstrap-edit-layout [class*="col"] [class*="col"] [class*="col"] {
     background-color: #AAAAAA;
 }
 
-.panel-bootstrap-edit-layout [class*="span"] [class*="span"] [class*="span"] [class*="span"]{
+.panel-bootstrap-edit-layout [class*="col"] [class*="col"] [class*="col"] [class*="col"]{
     background-color: #999999;
 }
 
-.panel-bootstrap-edit-layout [class*="span"] [class*="span"] [class*="span"] [class*="span"] [class*="span"]{
+.panel-bootstrap-edit-layout [class*="col"] [class*="col"] [class*="col"] [class*="col"] [class*="col"]{
     background-color: #777777;
 }
 
-.panel-bootstrap-edit-layout [class*="span"] [class*="span"] [class*="span"] [class*="span"] [class*="span"] [class*="span"]{
+.panel-bootstrap-edit-layout [class*="col"] [class*="col"] [class*="col"] [class*="col"] [class*="col"] [class*="col"]{
     background-color: #555555;
 }
 
-.panel-bootstrap-edit-layout [class*="span"] [class*="span"] [class*="span"] [class*="span"] [class*="span"] [class*="span"] [class*="span"]{
+.panel-bootstrap-edit-layout [class*="col"] [class*="col"] [class*="col"] [class*="col"] [class*="col"] [class*="col"] [class*="col"]{
     background-color: #333333;
 }
 
+/* Hide empty columns */
+.panel-bootstrap-edit-layout [class*="col"] [class*="col"]:empty,
+.panel-bootstrap-edit-layout [class*="col"] [class*="col"] [class*="col"]:empty,
+.panel-bootstrap-edit-layout [class*="col"] [class*="col"] [class*="col"] [class*="col"]:empty,
+.panel-bootstrap-edit-layout [class*="col"] [class*="col"] [class*="col"] [class*="col"] [class*="col"]:empty,
+.panel-bootstrap-edit-layout [class*="col"] [class*="col"] [class*="col"] [class*="col"] [class*="col"] [class*="col"]:empty,
+.panel-bootstrap-edit-layout [class*="col"] [class*="col"] [class*="col"] [class*="col"] [class*="col"] [class*="col"] [class*="col"]:empty {
+  display: none;
+}
 
-.row-fluid > [class*="span"]{
+.row-fluid > [class*="col"]{
     margin-left: 0 !important;
 }  
 
-.row-fluid > [class*="span"] ~ [class*="span"]{
+.row-fluid > [class*="col"] ~ [class*="col"]{
     margin-left: 2.12766% !important; 
 }   
 
 .bootstrap-class-selector{
   margin: 0 auto;
-  width: 200px;
 }
 
 .bootstrap-class-selector label{
@@ -57,11 +71,15 @@
   float: left;
   margin-left: 10px !important;
   margin-right: 15px !important;
-  margin-top: 5px !important;
+  line-height: 24px;
 }
 
 .bootstrap-class-selector select{
   float:left;
+}
+
+.bootstrap-class-selector .form-item{
+  float: left;
 }
 
 .panel-bootstrap-edit-layout div.panels-display h2.label {
@@ -145,4 +163,9 @@
 #panels-edit-display .helperclass {
   margin: .5em;
 }
-
+#panel-bootstrap-container-canvas .panels-bootstrap-container .panels-bootstrap-container .bootstrap-title { 
+  width:4em; 
+}
+#panel-bootstrap-container-canvas .panels-bootstrap-container .panels-bootstrap-container .inside .bootstrap-title {
+  width:3em; 
+}

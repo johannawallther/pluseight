@@ -5,7 +5,7 @@
  */
 // Plugin definition
 $plugin = array(
-  'title' => t('Twitter Bootstrap 2'),
+  'title' => t('Twitter Bootstrap 3'),
   'category' => t('Builders'),
   'icon' => 'bootstrap.png',
   'theme' => 'panels_bootstrap',
@@ -105,146 +105,39 @@ function panels_bootstrap_convert_settings(&$settings, &$layout) {
         // The 'canvas' is a special row that does not get rendered
         // normally, but is used to contain the columns.
         'canvas' => array(
-          'type' => 'row',
-          'contains' => 'column',
+          'type' => 'container',
+          'contains' => 'row',
           'children' => array('main'),
           'parent' => NULL,
+          'element_id_default' => 1,
         ),
         'main' => array(
-          'type' => 'column',
-          'bootstrap_class' => 'span12',
-          'grid_type' => 'row',
-          'children' => array('main-row'),
-          'parent' => 'canvas',
-        ),
-        'main-row' => array(
           'type' => 'row',
+          'children' => array('main-column'),
+          'parent' => 'canvas',
+          'element_id_default' => 1,
+        ),
+        'main-column' => array(
+          'type' => 'column',
           'contains' => 'region',
+          'bootstrap_class' => array(
+            'xs' => 'col-xs-12',
+            'sm' => 'col-sm-12',
+            'md' => 'col-md-12',
+            'lg' => 'col-lg-12'
+          ),					
           'children' => array('center'),
           'parent' => 'main',
+          'element_id_default' => 1,
         ),
         'center' => array(
           'type' => 'region',
           'title' => t('Center'),
-          'bootstrap_class' => 'span12',
-          'grid_type' => 'row',
-          'parent' => 'main-row',
+          'parent' => 'main-column',
+          'element_id_default' => 1,
         ),
       ),
     );
-  }
-  else if (!isset($settings['items'])) {
-    // Convert an old style bootstrap to a new style bootstrap.
-    $old = $settings;
-    $settings = array();
-    $settings['items']['canvas'] = array(
-      'type' => 'row',
-      'contains' => 'column',
-      'children' => array(),
-      'parent' => NULL,
-    );
-    // add the left sidebar column, row and region if it exists.
-    if (!empty($old['sidebars']['left'])) {
-      $settings['items']['canvas']['children'][] = 'sidebar-left';
-      $settings['items']['sidebar-left'] = array(
-        'type' => 'column',
-        'bootstrap_class' => 'span1',
-        'grid_type' => 'row',
-        'children' => array('sidebar-left-row'),
-        'parent' => 'canvas',
-      );
-      $settings['items']['sidebar-left-row'] = array(
-        'type' => 'row',
-        'contains' => 'region',
-        'children' => array('sidebar_left'),
-        'parent' => 'sidebar-left',
-      );
-      $settings['items']['sidebar_left'] = array(
-        'type' => 'region',
-        'title' => t('Left sidebar'),
-        'bootstrap_class' => 'span1',
-        'grid_type' => 'row',
-        'parent' => 'sidebar-left-row',
-      );
-    }
-
-    $settings['items']['canvas']['children'][] = 'main';
-
-    if (!empty($old['sidebars']['right'])) {
-      $settings['items']['canvas']['children'][] = 'sidebar-right';
-      $settings['items']['sidebar-right'] = array(
-        'type' => 'column',
-        'bootstrap_class' => 'span1',
-        'grid_type' => 'row',
-        'children' => array('sidebar-right-row'),
-        'parent' => 'canvas',
-      );
-      $settings['items']['sidebar-right-row'] = array(
-        'type' => 'row',
-        'contains' => 'region',
-        'children' => array('sidebar_right'),
-        'parent' => 'sidebar-right',
-      );
-      $settings['items']['sidebar_right'] = array(
-        'type' => 'region',
-        'title' => t('Right sidebar'),
-        'bootstrap_class' => 'span1',
-        'grid_type' => 'row',
-        'parent' => 'sidebar-right-row',
-      );
-    }
-
-    // Add the main column.
-    $settings['items']['main'] = array(
-      'type' => 'column',
-      'bootstrap_class' => 'span1',
-      'grid_type' => 'row',
-      'children' => array(),
-      'parent' => 'canvas',
-    );
-
-    // Add rows and regions.
-    for ($row = 1; $row <= intval($old['rows']); $row++) {
-      // Create entry for the row
-      $settings['items']["row_$row"] = array(
-        'type' => 'row',
-        'contains' => 'region',
-        'children' => array(),
-        'parent' => 'main',
-      );
-      // Add the row to the parent's children
-      $settings['items']['main']['children'][] = "row_$row";
-
-      for ($col = 1; $col <= intval($old["row_$row"]['columns']); $col++) {
-        // Create entry for the region
-        $settings['items']["row_${row}_$col"] = array(
-          'type' => 'region',
-          'bootstrap_class' => 'span1',
-          'grid_type' => 'row',
-          'parent' => "row_$row",
-        );
-        // Add entry for the region to the row's children
-        $settings['items']["row_$row"]['children'][] = "row_${row}_$col";
-
-        // Apply the proper title to the region
-        if (!empty($old["row_$row"]['names'][$col - 1])) {
-          $settings['items']["row_${row}_$col"]['title'] = $old["row_$row"]['names'][$col - 1];
-        }
-        else {
-          $settings['items']["row_${row}_$col"]['title'] = t("Row @row, Column @col", array('@row' => $row, '@col' => $col));
-        }
-      }
-    }
-  }
-  else if (isset($settings['canvas'])) {
-    // Convert the old 'canvas' to the new canvas row.
-    $settings['items']['canvas'] = array(
-      'type' => 'row',
-      'contains' => 'column',
-      'children' => $settings['canvas'],
-      'parent' => NULL,
-    );
-    unset($settings['canvas']);
   }
 }
 
@@ -285,20 +178,18 @@ function panels_bootstrap_create_renderer($admin, $css_id, $content, $settings, 
     // always scale in admin mode.
     $renderer->scale_base = 99.0;
   }
-  else {
-    $renderer->scale_base = !empty($settings['items']['canvas']['no_scale']) ? 100.0 : 99.0;
-  }
   $renderer->id_str = $css_id ? 'id="' . $css_id . '"' : '';
   $renderer->admin = $admin;
   $renderer->handler = $handler;
 
   // Set up basic classes for all of our components.
-  $renderer->name                 = !empty($layout['layout']) ? $layout['layout']->name : $display->did;
-  $renderer->base_class           = $renderer->name;
-  $renderer->item_class['column'] = 'panels-bootstrap-column';
-  $renderer->item_class['row']    = 'panels-bootstrap-row';
-  $renderer->item_class['region'] = 'panels-bootstrap-region';
-  $renderer->base['canvas']       = 'panels-bootstrap-' . $renderer->base_class;
+  $renderer->name                    = !empty($layout['layout']) ? $layout['layout']->name : $display->did;
+  $renderer->base_class              = $renderer->name;
+  $renderer->item_class['column']    = 'panels-bootstrap-column';
+  $renderer->item_class['container'] = 'panels-bootstrap-container';	
+  $renderer->item_class['row']       = 'panels-bootstrap-row';
+  $renderer->item_class['region']    = 'panels-bootstrap-region';
+  $renderer->base['canvas']          = 'panels-bootstrap-' . $renderer->base_class;
 
   // Override these if selected from the UI and not in admin mode.
   if (!$admin) {
@@ -315,21 +206,17 @@ function panels_bootstrap_create_renderer($admin, $css_id, $content, $settings, 
     if (!empty($settings['items']['canvas']['region_class'])) {
       $renderer->item_class['region'] = $settings['items']['canvas']['region_class'];
     }
+    if (!empty($settings['items']['canvas']['container_class'])) {
+      $renderer->item_class['container'] = $settings['items']['canvas']['container_class'];
+    }		
   }
 
-  // Get the separation values out of the canvas settings.
-  $renderer->column_separation = !empty($settings['items']['canvas']['column_separation']) ? $settings['items']['canvas']['column_separation'] : '0.5em';
-
-  $renderer->region_separation = !empty($settings['items']['canvas']['region_separation']) ? $settings['items']['canvas']['region_separation'] : '0.5em';
-
-  $renderer->row_separation = !empty($settings['items']['canvas']['row_separation']) ? $settings['items']['canvas']['row_separation'] : '0.5em';
-
   // Make some appended classes so it's easier to reference them.
-
-  $renderer->base['column'] = $renderer->item_class['column'] . '-' . $renderer->base_class;
-  $renderer->base['row']    = $renderer->item_class['row'] . '-' . $renderer->base_class;
-  $renderer->base['region'] = $renderer->item_class['region'] . '-' . $renderer->base_class;
-
+  $renderer->base['column']    = $renderer->item_class['column'] . '-' . $renderer->base_class;
+  $renderer->base['row']       = $renderer->item_class['row'] . '-' . $renderer->base_class;
+  $renderer->base['region']    = $renderer->item_class['region'] . '-' . $renderer->base_class;
+  $renderer->base['container'] = $renderer->item_class['container'] . '-' . $renderer->base_class;
+	
   if ($renderer->name != 'new') {
     // Use v2 to guarantee all CSS gets regenerated to account for changes in
     // how some divs will be rendered.
@@ -346,30 +233,36 @@ function panels_bootstrap_create_renderer($admin, $css_id, $content, $settings, 
  * Draw the bootstrap layout.
  */
 function theme_panels_bootstrap($vars) {
-  $css_id = $vars['css_id'];
   $content = $vars['content'];
+
   $settings = $vars['settings'];
   $display = $vars['display'];
   $layout = $vars['layout'];
   $handler = $vars['renderer'];
 
   panels_bootstrap_convert_settings($settings, $layout);
-
+	drupal_add_css(drupal_get_path('module', 'panels_bootstrap_layout_builder') . '/plugins/layouts/bootstrap/bootstrap.css');
+  
+  $css_id = !empty($settings['items']['canvas']['element_id']) ? $settings['items']['canvas']['element_id'] : $vars['css_id'];
   $renderer = panels_bootstrap_create_renderer(FALSE, $css_id, $content, $settings, $display, $layout, $handler);
 
-  if(isset($renderer->settings['items']['canvas']['grid_type'])){
-    $grid_type = $renderer->settings['items']['canvas']['grid_type'];
-  }else{
-    $grid_type = 'row';
+  $classes = $renderer->base['canvas'] ? array($renderer->base['canvas']) : array();
+
+	if(!empty($settings['items']['canvas']['container_class_add'])) {
+		$classes[] = ' container';
+	} elseif(!empty($settings['items']['canvas']['container_full_class_add']) || !empty($settings['items']['canvas']['container_fluid_class_add'])) {
+    $classes[] = ' container-fluid';
   }
 
-  $output = "<div class=\"panel-bootstrap " . $renderer->base['canvas'] . " clearfix\" $renderer->id_str>\n";
-  $output .= "<div class=\"".$grid_type." panel-bootstrap-inside " . $renderer->base['canvas'] . "-inside\">\n";
+  if(!empty($settings['items']['canvas']['wrapper'])) {
+    $wrapper = $settings['items']['canvas']['wrapper'];
+  } else {
+    $wrapper = 'div';
+  }
 
+  $output = '<'.$wrapper.' class="panel-bootstrap ' . implode(' ', $classes) .'"' . $renderer->id_str .">\n";
   $output .= panels_bootstrap_render_items($renderer, $settings['items']['canvas']['children'], $renderer->base['canvas']);
-
-  // Wrap the whole thing up nice and snug
-  $output .= "</div>\n</div>\n";
+  $output .= "</".$wrapper.">\n";
 
   return $output;
 }
@@ -387,7 +280,7 @@ function theme_panels_bootstrap_admin($vars) {
 
   if ($path = libraries_get_path('bootstrap')) {
     drupal_add_css($path . '/css/bootstrap.min.css');
-    drupal_add_css($path . '/css/bootstrap-responsive.min.css');
+    drupal_add_css($path . '/css/bootstrap-theme.min.css');
   }
 
   // We never draw stored bootstrap layouts in admin mode; they must be edited
@@ -412,14 +305,10 @@ function theme_panels_bootstrap_admin($vars) {
   else {
     $output = "<div class=\"panel-bootstrap " . $renderer->base['canvas'] . " clearfix panel-bootstrap-admin panel-bootstrap-edit-layout\" $renderer->id_str>\n";
   }
-  if(isset($renderer->settings['items']['canvas']['grid_type'])){
-    $grid_type = $renderer->settings['items']['canvas']['grid_type'];
-  }else{
-    $grid_type = 'row';
-  }
-  $output .= "<div class=\"". $grid_type ."panel-bootstrap-inside " . $renderer->base['canvas'] . "-inside \">\n";
 
-  $content = panels_bootstrap_render_items($renderer, $settings['items']['canvas']['children'], $renderer->base['row'] . '-canvas');
+  $output .= "<div class=\"row panel-bootstrap-inside " . $renderer->base['canvas'] . "-inside \">\n";
+
+  $content = panels_bootstrap_render_items($renderer, $settings['items']['canvas']['children'], $renderer->base['container'] . '-canvas');
   $output .= panels_bootstrap_render_item($renderer, $settings['items']['canvas'], $content, 'canvas', 0, 0, TRUE);
 
   // Wrap the whole thing up nice and snug
@@ -444,13 +333,17 @@ function panels_bootstrap_render_items($renderer, $list, $owner_id) {
     $location = isset($renderer->positions[$id]) ? $renderer->positions[$id] : 'middle';
 
     switch ($item['type']) {
-      case 'column':
-        $content = panels_bootstrap_render_items($renderer, $item['children'], $renderer->base['column'] . '-' . $id);
+			case 'container':
+        $content = panels_bootstrap_render_items($renderer, $item['children'], $renderer->base['container'] . '-' . $id);
         $groups[$location] .= panels_bootstrap_render_item($renderer, $item, $content, $id, $position, $max);
-        break;
+				break;
       case 'row':
         $content = panels_bootstrap_render_items($renderer, $item['children'], $renderer->base['row'] . '-' . $id);
         $groups[$location] .= panels_bootstrap_render_item($renderer, $item, $content, $id, $position, $max, TRUE);
+        break;
+      case 'column':
+        $content = panels_bootstrap_render_items($renderer, $item['children'], $renderer->base['column'] . '-' . $id);
+        $groups[$location] .= panels_bootstrap_render_item($renderer, $item, $content, $id, $position, $max);
         break;
       case 'region':
         $content = isset($renderer->content[$id]) ? $renderer->content[$id] : "&nbsp;";
@@ -467,7 +360,7 @@ function panels_bootstrap_render_items($renderer, $list, $owner_id) {
   foreach ($groups as $position => $content) {
     if (!empty($content) || $renderer->admin) {
       if ($group_count > 1 || $renderer->admin) {
-        $output .= $content;
+        $output .= '<div class="' . $owner_id . '-' . $position . '">' . $content . '</div>';
       }
       else {
         $output .= $content;
@@ -482,47 +375,80 @@ function panels_bootstrap_render_items($renderer, $list, $owner_id) {
  * Render a column in the bootstrap layout.
  */
 function panels_bootstrap_render_item($renderer, $item, $content, $id, $position, $max, $clear = FALSE) {
-
   $base = $renderer->item_class[$item['type']];
   $output = '';
-  $item_class = '';
-  $bootstrap_class = '';
-  if (isset($item['class'])) {
-    $item_class = check_plain($item['class']);
+  $item_classes = array();
+
+	switch($item['type']) {
+		case 'container':
+			if(!empty($item['container_class_add'])) $item_classes[] = 'container';
+			if(!empty($item['container_full_class_add']) || !empty($item['container_fluid_class_add'])) $item_classes[] = 'container-fluid';
+			if(!empty($item['class'])) $item_classes[] = check_plain($item['class']);
+			if(!empty($base) && !empty($item['class_default_add'])) $item_classes[] = $base;
+			break;		
+		case 'row':
+      $item_classes[] = 'row';
+			if(!empty($item['class'])) $item_classes[] = check_plain($item['class']);
+			if(!empty($base) && !empty($item['class_default_add'])) $item_classes[] = $base;
+			break;
+		case 'column':
+      if(!empty($item['class_default_add'])) $item_classes[] = 'column';
+			if(!empty($item['class'])) $item_classes[] = check_plain($item['class']);
+			if(!empty($base)) $item_classes[] = $base;
+			if(isset($item['bootstrap_class'])) {
+				$bootstrap_class = $item['bootstrap_class'];
+			} else {
+				$bootstrap_class = array(
+					'xs' => 'col-xs-12',
+					'sm' => 'col-sm-12',
+					'md' => 'col-md-12',
+					'lg' => 'col-lg-12'
+				);
+			}
+      $item_classes += $bootstrap_class;
+			break;
+		case 'region':
+			if(!empty($base) && !empty($item['class_default_add'])) $item_classes[] = $base;
+			if(!empty($item['container_class_add'])) $item_classes[] = 'container';
+      if(!empty($item['container_full_class_add']) || !empty($item['container_fluid_class_add'])) $item_classes[] = 'container-fluid';
+			if(!empty($item['class'])) $item_classes[] = check_plain($item['class']);
+			break;
+		default:
+			break;
+	}
+	if(!empty($item['wrapper'])) {
+    $wrapper = $item['wrapper'];
+  } else {
+    $wrapper = 'div';
   }
 
-  if (($item['type'] == 'region' || $item['type'] == 'column') && isset($item['bootstrap_class'])){
-    $bootstrap_class = $item['bootstrap_class'];
-  } else if(($item['type'] == 'region' || $item['type'] == 'column')){
-    $bootstrap_class = 'span1';
+  // Define element ID.
+  if (!empty($item['element_id_default'])) {
+    $element_id = 'panel-bootstrap-'. $item['type'] .'-'. $id;
+  }
+  else {
+    $element_id = !empty($item['element_id']) ? $item['element_id'] : '';
   }
 
-  $item_type = $item['type'];
-  
-  if($item['type'] == "row"){
-    if(isset($item['grid_type'])){
-      $grid_type = $item['grid_type'];
-    }else{
-      $grid_type = 'row';
-    }
+  // Make sure we have at least this class for admin ajax calls.
+  $item_classes[] = $renderer->base[$item['type']] . '-' . $id;
+
+  // Adds default classes if needed.
+  if (!empty($item['class_default_add'])) {
+    if ($position == 0) $item_classes[] = $item['type'] . '-inside-first';
+    if ($position == $max) $item_classes[] = $item['type'] . '-inside-last';
+    if ($clear) $item_classes[] = 'clearfix';
+    $item_classes[] = 'inside';
   }
 
-  $output .= '  <div id="panel-bootstrap-'. $item['type'] .'-'. $id .'" class="' . $bootstrap_class . ' ' . $item_class . ' ' . $grid_type . ' inside';
-  if ($position == 0) {
-    $output .= ' ' . $item['type'] . '-inside-first';
-  }
-  if ($position == $max) {
-    $output .= ' ' . $item['type'] . '-inside-last';
-  }
-  if ($clear) {
-    $output .= ' clearfix';
-  }
+  $element_id = !empty($element_id) ? ' id="' . $element_id . '"' : '';
+  $element_classes = !empty($item_classes) ? ' class="' . implode(' ', $item_classes) . '"' : '';
 
-  $output .= "\">\n";
+  $output .= "<$wrapper $element_id $element_classes>\n";
+	
   if (!empty($renderer->admin)) {
-    
     $output .= panels_bootstrap_render_item_links($renderer, $id, $item);
-    if(($item['type'] == 'region' || $item['type'] == 'column')){
+    if($item['type'] == 'column'){
       $output .= '<div class="bootstrap-class-selector clearfix" >';
       $output .= panels_bootstrap_render_bootstrap_class_selector($renderer,$id);
       $output .= '</div>';
@@ -530,7 +456,7 @@ function panels_bootstrap_render_item($renderer, $item, $content, $id, $position
     
   }
   $output .= $content;
-  $output .= '  </div>' . "\n";
+  $output .= '  </'.$wrapper.'>' . "\n";
 
   return $output;
 }
@@ -543,31 +469,92 @@ function panels_bootstrap_render_item($renderer, $item, $content, $id, $position
  * modify the right item.
  */
 function panels_bootstrap_render_bootstrap_class_selector($renderer,$item_id) {
-  $bootstrap_class = '';
+
   $item = $renderer->settings['items'][$item_id];
-  $form = array(
-    '#type' => 'select',
-    '#id' => $item_id.'-class-selector',
-    '#attributes' => array('data-for-id' => $item_id,'data-for' => 'panel-bootstrap-'.$item['type'].'-'.$item_id),
-    '#title' => t('Span size'),
-    '#options' => array(
-      'span1' => 'span1',
-      'span2' => 'span2',
-      'span3' => 'span3',
-      'span4' => 'span4',
-      'span5' => 'span5',
-      'span6' => 'span6',
-      'span7' => 'span7',
-      'span8' => 'span8',
-      'span9' => 'span9',
-      'span10' => 'span10',
-      'span11' => 'span11',
-      'span12' => 'span12'
-      ),
-    '#default_value' => "span1",
-    '#value' => isset($item['bootstrap_class']) ? $item['bootstrap_class'] : "span1",
+  $screen_sizes = array("xs","sm","md","lg");
+  $grid_size = variable_get('panels_bootstrap_grid_size', 12);
+
+  $form[] = array(
+    '#markup' => '<button type="button" class="btn btn-default btn-xs  size-toggle">'.t('Column size').'</button>',
+  );
+  $form[] = array(
+    '#markup' => '<button type="button" class="btn btn-default btn-xs ordering-toggle">'.t('Column ordering').'</button>',
+  );
+  $form[] = array(
+    '#markup' => '<button type="button" class="btn btn-default btn-xs offset-toggle">'.t('Column offset').'</button>',
   );
 
+  foreach($screen_sizes as $screen_size) {
+    $options = array('size' => array('' => '-'), 'order' => array('' => '-'), 'offset' => array('' => '-'));
+    for ($x = 1; $x <= $grid_size; $x++) {
+      $options['size']['col-'.$screen_size.'-'.$x] = 'col-'.$screen_size.'-'.$x;
+      $options['order']['col-'.$screen_size.'-push-'.$x] = 'col-'.$screen_size.'-push-'.$x;
+      $options['order']['col-'.$screen_size.'-pull-'.$x] = 'col-'.$screen_size.'-pull-'.$x;
+      $options['offset']['col-'.$screen_size.'-offset-'.$x] = 'col-'.$screen_size.'-offset-'.$x;
+    }
+
+    $value = 'col-'.$screen_size.'-'.$grid_size;
+    if(isset($item['bootstrap_class'][$screen_size])) {
+      $valueArray = explode(' ', $item['bootstrap_class'][$screen_size]);
+      if(isset($valueArray[0])) {
+        $value = $valueArray[0]; 
+      }
+    }
+    $form[] = array(
+      '#type' => 'select',
+      '#id' => $item_id.'-'.$screen_size.'-class-selector',
+      '#prefix' => '<div class="size-selector hide">',
+      '#suffix' => '</div>',      
+      '#attributes' => array('class' => array('input-sm'), 'data-for-id' => $item_id,'data-for' => 'panel-bootstrap-'.$item['type'].'-'.$item_id, 'data-screen-size' => $screen_size, 'data-type' => 'size'),
+      '#title' => t($screen_size . ' column size'),
+      '#options' => $options['size'],
+      '#default_value' => "1",
+      '#value' => $value,
+    );
+
+
+    $value = '';
+    if(isset($item['bootstrap_class'][$screen_size])) {
+      $valueArray = explode(' ', $item['bootstrap_class'][$screen_size]);
+      if(isset($valueArray[1])) {
+        $value = $valueArray[1]; 
+      }
+    }
+    
+    $form[] = array(
+      '#type' => 'select',
+      '#id' => $item_id.'-'.$screen_size.'-class-selector-ordering',
+      '#attributes' => array('class' => array('input-sm'), 'data-for-id' => $item_id,'data-for' => 'panel-bootstrap-'.$item['type'].'-'.$item_id, 'data-screen-size' => $screen_size, 'data-type' => 'ordering'),
+      '#title' => t($screen_size . ' column ordering'),
+      '#prefix' => '<div class="ordering-selector hide">',
+      '#suffix' => '</div>',
+      '#options' => $options['order'],
+      '#default_value' => "1",
+      '#value' => $value,
+    );
+
+
+    $value = '';
+    if(isset($item['bootstrap_class'][$screen_size])) {
+      $valueArray = explode(' ', $item['bootstrap_class'][$screen_size]);
+      if(isset($valueArray[2])) {
+        $value = $valueArray[2]; 
+      }
+    }
+
+    $form[] = array(
+      '#type' => 'select',
+      '#id' => $item_id.'-'.$screen_size.'-class-selector-offset',
+      '#attributes' => array('class' => array('input-sm'), 'data-for-id' => $item_id,'data-for' => 'panel-bootstrap-'.$item['type'].'-'.$item_id, 'data-screen-size' => $screen_size, 'data-type' => 'offset'),
+      '#title' => t($screen_size . ' column offset'),
+      '#prefix' => '<div class="offset-selector hide">',
+      '#suffix' => '</div>',
+      '#options' => $options['offset'],
+      '#default_value' => "1",
+      '#value' => $value,
+    );
+  }
+  
   return drupal_render($form);
 }
 
@@ -578,43 +565,100 @@ function panels_bootstrap_render_item_links($renderer, $id, $item) {
   $links = array();
   $remove = '';
   $add = '';
-  if ($item['type'] == 'column') {
-    $title = t('Column');
-    $settings = t('Column settings');
-    if (empty($item['children'])) {
-      $remove = t('Remove column');
-      $add = t('Add row');
-    }
-    else {
-      $add = t('Add row to top');
-      $add2 = t('Add row to bottom');
-    }
-  }
-  else if ($item['type'] == 'row') {
-    if ($id == 'canvas') {
-      $title = t('Canvas');
-      $settings = t('Canvas settings');
-    }
-    else {
-      $title = t('Row');
-      $settings = t('Row settings');
-    }
-    if (empty($item['children'])) {
-      if ($id != 'canvas') {
-        $remove = t('Remove row');
-      }
-      $add = $item['contains'] == 'region' ? t('Add region') : t('Add column');
-    }
-    else {
-      $add = $item['contains'] == 'region' ? t('Add region to left') : t('Add column to left');
-      $add2 = $item['contains'] == 'region' ? t('Add region to right') : t('Add column to right');
-    }
-  }
-  else if ($item['type'] == 'region') {
-    $title = t('Region');
-    $settings = t('Region settings');
-    $remove = t('Remove region');
-  }
+	
+	switch($item['type']) {
+		case 'container':
+			if($id == 'canvas') {
+				$title = t('Canvas');
+				$settings = t('Canvas settings');
+			} else {
+				$title = t('Container');
+				$settings = t('Container settings');
+			}
+			if (empty($item['children'])) {
+				if($id != 'canvas') {
+					$remove = t('Remove container');
+				}
+				switch($item['contains']) {
+					case 'region':
+						$add = t('Add region');
+						break;
+					case 'row':
+						$add = t('Add row');
+						break;
+					case 'container':
+						$add = t('Add container');
+						break;
+				}
+			}	else {
+				switch($item['contains']) {
+					case 'region':
+						$add = t('Add region to top');
+						$add2 = t('Add region to bottom');
+						break;
+					case 'row':
+						$add = t('Add row to top');
+						$add2 = t('Add row to bottom');					
+						break;
+					case 'container':
+						$add = t('Add container to top');
+						$add2 = t('Add container to bottom');
+				}
+			}
+			break;
+		case 'row':
+			$title = t('Row');
+			$settings = t('Row settings');
+			if (empty($item['children'])) {
+				$remove = t('Remove row');
+				$add = t('Add column');
+			} else {
+				$add = t('Add column to left');
+				$add2 = t('Add column to right');
+				break;
+			}
+			break;
+		case 'column':
+			$title = t('Column');
+			$settings = t('Column settings');
+			if (empty($item['children'])) {
+				$remove = t('Remove column');
+				switch($item['contains']) {
+					case 'container':
+						$add = t('Add container');
+						break;
+					case 'row':
+						$add = t('Add row');
+						break;
+					case 'region':
+						$add = t('Add region');
+						break;
+				}
+			}	else {
+				switch($item['contains']) {
+					case 'container':
+						$add = t('Add container to top');
+						$add2 = t('Add container to bottom');
+						break;
+					case 'row':
+						$add = t('Add row to top');
+						$add2 = t('Add row to bottom');					
+						break;
+					case 'region':
+						$add = t('Add region to top');
+						$add2 = t('Add region to bottom');					
+						break;
+				}
+			}
+			break;
+		case 'region':
+			$title = t('Region');
+			$settings = t('Region settings');
+			$remove = t('Remove region');
+			break;
+		default:
+			break;
+	}
 
   if (!empty($settings)) {
     $links[] = array(
@@ -673,16 +717,18 @@ function panels_ajax_bootstrap_edit_settings($handler, $id) {
 
 
   switch ($item['type']) {
+		case 'container':
+      if ($id == 'canvas') {
+        $title = t('Configure canvas');
+      } else {	
+				$title = t('Configure container');
+			}
+			break;
     case 'column':
       $title = t('Configure column');
       break;
     case 'row':
-      if ($id == 'canvas') {
-        $title = t('Configure canvas');
-      }
-      else {
-        $title = t('Configure row');
-      }
+			$title = t('Configure row');
       break;
     case 'region':
       $title = t('Configure region');
@@ -719,7 +765,7 @@ function panels_ajax_bootstrap_edit_settings($handler, $id) {
 
     // Rerender our links in case something changed.
     $output[] = ajax_command_replace('.bootstrap-links-' . $id,
-      panels_bootstrap_render_item_links($renderer, $id, $item));
+		panels_bootstrap_render_item_links($renderer, $id, $item));
 
     // If editing the canvas, reset the CSS width
     if ($id == 'canvas') {
@@ -766,100 +812,324 @@ function panels_bootstrap_config_item_form($form, &$form_state) {
   $siblings = &$form_state['siblings'];
   $settings = &$form_state['settings'];
   $id = &$form_state['id'];
-
-  if ($item['type'] == 'region') {
-    $form['title'] = array(
-      '#title' => t('Region title'),
-      '#type' => 'textfield',
-      '#default_value' => $item['title'],
-      '#required' => TRUE,
-    );
-  }
-
-  if ($item['type'] == 'row' || $item['type'] == 'canvas'){
-    $form['grid_type'] = array(
-      '#type' => 'select',
-      '#title' => t('Grid type'),
-      '#default_value' => $item['grid_type'],
-      '#options' => array(
-        'row-fluid' => t('Fluid'),
-        'row' => t('Basic'),
-      ),
-    );
-  }
-
-  if ($id == 'canvas') {
-    $form['class'] = array(
-      '#title' => t('Canvas class'),
-      '#type' => 'textfield',
-      '#default_value' => isset($item['class']) ? $item['class'] : '',
-      '#description' => t('This class will the primary class for this layout. It will also be appended to all column, row and region_classes to ensure that layouts within layouts will not inherit CSS from each other. If left blank, the name of the layout or ID of the display will be used.'),
-    );
-
-    $form['column_class'] = array(
-      '#title' => t('Column class'),
-      '#type' => 'textfield',
-      '#default_value' => isset($item['column_class']) ? $item['column_class'] : '',
-      '#description' => t('This class will be applied to all columns of the layout. If left blank this will be panels-bootstrap-column.'),
-    );
-
-    $form['row_class'] = array(
-      '#title' => t('Row class'),
-      '#type' => 'textfield',
-      '#default_value' => isset($item['row_class']) ? $item['row_class'] : '',
-      '#description' => t('This class will be applied to all rows of the layout. If left blank this will be panels-bootstrap-row.'),
-    );
-
-    $form['region_class'] = array(
-      '#title' => t('Region class'),
-      '#type' => 'textfield',
-      '#default_value' => isset($item['region_class']) ? $item['region_class'] : '',
-      '#description' => t('This class will be applied to all regions of the layout. If left blank this will be panels-bootstrap-region.'),
-    );
-
-    $form['no_scale'] = array(
-      '#type' => 'checkbox',
-      '#title' => t('Scale fluid widths for IE6'),
-      '#description' => t('IE6 does not do well with 100% widths. If checked, width will be scaled to 99% to compensate.'),
-      '#default_value' => empty($item['no_scale']),
-    );
-
-    $form['fixed_width'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Fixed width'),
-      '#description' => t('If a value is entered, the layout canvas will be fixed to the given pixel width.'),
-      '#default_value' => isset($item['fixed_width']) ? $item['fixed_width'] : '',
-    );
-
-    $form['column_separation'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Column separation'),
-      '#description' => t('How much padding to put on columns that are that are next to other columns. Note that this is put on both columns so the real amount is doubled.'),
-      '#default_value' => isset($item['column_separation']) ? $item['column_separation'] : '0.5em',
-    );
-
-    $form['region_separation'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Region separation'),
-      '#description' => t('How much padding to put on regions that are that are next to other regions. Note that this is put on both regions so the real amount is doubled.'),
-      '#default_value' => isset($item['region_separation']) ? $item['region_separation'] : '0.5em',
-    );
-
-    $form['row_separation'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Row separation'),
-      '#description' => t('How much padding to put on beneath rows to separate them from each other. Because this is placed only on the bottom, not hte top, this is NOT doubled like column/region separation.'),
-      '#default_value' => isset($item['row_separation']) ? $item['row_separation'] : '0.5em',
-    );
-  }
-  else {
-    $form['class'] = array(
-      '#title' => t('CSS class'),
-      '#type' => 'textfield',
-      '#default_value' => isset($item['class']) ? $item['class'] : '',
-      '#description' => t('Enter a CSS class that will be used. This can be used to apply automatic styling from your theme, for example.'),
-    );
-  }
+	
+	switch($item['type']) {
+		case 'container':
+			if ($id == 'canvas') {
+        $form['wrapper'] = array(
+          '#title' => t('Wrapper'),
+          '#type' => 'textfield',
+					'#default_value' => isset($item['wrapper']) ? $item['wrapper'] : 'div',
+          '#description' => t('HTML element for the canvas'),
+        );
+        $form['element_id_default'] = array(
+          '#type' => 'checkbox',
+          '#title' => t('Use default ID'),
+          '#default_value' => isset($item['element_id_default']) ? $item['element_id_default'] : 1,
+          '#description' => t('Add the default ID like #panel-bootstrap-column-main-column to this container.')
+        );
+				$form['element_id'] = array(
+					'#title' => t('ID'),
+					'#type' => 'textfield',
+					'#default_value' => isset($item['element_id']) ? $item['element_id'] : '',
+					'#description' => t('Define a custom ID for this element'),
+          '#states' => array(
+            'visible' => array(
+              'input[name="element_id_default"]' => array('checked' => FALSE)
+            )
+          ),
+				);
+        $form['class_default_add'] = array(
+          '#type' => 'checkbox',
+          '#title' => t('Add default classes'),
+          '#default_value' => isset($item['class_default_add']) ? $item['class_default_add'] : 1,
+          '#description' => t('Add the default classes like .row, .panels-bootstrap-row, .inside, .row-inside-first etc to this container.')
+        );        
+				$form['class'] = array(
+					'#title' => t('Class'),
+					'#type' => 'textfield',
+					'#default_value' => isset($item['class']) ? $item['class'] : '',
+					'#description' => t('It will add a special class to this canvas'),
+          '#states' => array(
+            'visible' => array(
+              'input[name="class_default_add"]' => array('checked' => FALSE)
+            )
+          ),
+				);
+				$form['container_class_add'] = array(
+					'#type' => 'checkbox',
+					'#title' => t('Add container class'),
+					'#default_value' => isset($item['container_class_add']) ? $item['container_class_add'] : 0,
+					'#description' => t('Add class "container" to this container')
+				);
+				$form['container_fluid_class_add'] = array(
+					'#type' => 'checkbox',
+					'#title' => t('Add container-fluid class'),
+					'#default_value' => isset($item['container_fluid_class_add']) ? $item['container_fluid_class_add'] : 0,
+					'#description' => t('If you use a full width layout, you need to add the "container-fluid" class to your container to avoid horizontal scrolling.')
+				);				
+				if(empty($item['children'])) {				
+					$form['contains'] = array(
+						'#type' => 'select',
+						'#title' => t('Contains'),
+						'#default_value' => $item['contains'],
+						'#options' => array(
+							'row' => t('Row'),			
+							'region' => t('Regions'),
+							'container' => t('Container'),
+						),
+					);
+				}
+				$form['column_class'] = array(
+					'#title' => t('Column class'),
+					'#type' => 'textfield',
+					'#default_value' => isset($item['column_class']) ? $item['column_class'] : 'panels-bootstrap-column',
+					'#description' => t('This class will be applied to all columns of the layout. If left blank this will be panels-bootstrap-column.'),
+				);
+				$form['row_class'] = array(
+					'#title' => t('Row class'),
+					'#type' => 'textfield',
+					'#default_value' => isset($item['row_class']) ? $item['row_class'] : 'panels-bootstrap-row',
+					'#description' => t('This class will be applied to all rows of the layout. If left blank this will be panels-bootstrap-row.'),
+				);
+				$form['region_class'] = array(
+					'#title' => t('Region class'),
+					'#type' => 'textfield',
+					'#default_value' => isset($item['region_class']) ? $item['region_class'] : 'panels-bootstrap-region',
+					'#description' => t('This class will be applied to all regions of the layout. If left blank this will be panels-bootstrap-region.'),
+				);
+				$form['container_class'] = array(
+					'#title' => t('Container class'),
+					'#type' => 'textfield',
+					'#default_value' => isset($item['container_class']) ? $item['container_class'] : 'panels-bootstrap-container',
+					'#description' => t('This class will be applied to all containers of the layout. If left blank this will be panels-bootstrap-container.'),
+				);
+				
+			} else {
+        $form['wrapper'] = array(
+          '#title' => t('Wrapper'),
+          '#type' => 'textfield',
+					'#default_value' => isset($item['wrapper']) ? $item['wrapper'] : 'div',
+          '#description' => t('HTML element for this container'),
+        );
+        $form['element_id_default'] = array(
+          '#type' => 'checkbox',
+          '#title' => t('Use default ID'),
+          '#default_value' => isset($item['element_id_default']) ? $item['element_id_default'] : 1,
+          '#description' => t('Add the default ID like #panel-bootstrap-column-main-column to this container.')
+        );
+				$form['element_id'] = array(
+					'#title' => t('ID'),
+					'#type' => 'textfield',
+					'#default_value' => isset($item['element_id']) ? $item['element_id'] : '',
+					'#description' => t('Define a custom ID for this element'),
+          '#states' => array(
+            'visible' => array(
+              'input[name="element_id_default"]' => array('checked' => FALSE)
+            )
+          ),
+				);
+        $form['class_default_add'] = array(
+          '#type' => 'checkbox',
+          '#title' => t('Add default classes'),
+          '#default_value' => isset($item['class_default_add']) ? $item['class_default_add'] : 1,
+          '#description' => t('Add the default classes like .row, .panels-bootstrap-row, .inside, .row-inside-first etc to this container.')
+        );        
+				$form['class'] = array(
+					'#title' => t('CSS class'),
+					'#type' => 'textfield',
+					'#default_value' => isset($item['class']) ? $item['class'] : '',
+					'#description' => t('Enter a CSS class that will be used. This can be used to apply automatic styling from your theme, for example.'),
+          '#states' => array(
+            'visible' => array(
+              'input[name="class_default_add"]' => array('checked' => FALSE)
+            )
+          ),          
+				);
+				$form['container_class_add'] = array(
+					'#type' => 'checkbox',
+					'#title' => t('Add container class'),
+					'#default_value' => isset($item['container_class_add']) ? $item['container_class_add'] : 0,
+					'#description' => t('Add class "container" to this container')
+				);
+				$form['container_fluid_class_add'] = array(
+					'#type' => 'checkbox',
+					'#title' => t('Add container-fluid class'),
+					'#default_value' => isset($item['container_fluid_class_add']) ? $item['container_fluid_class_add'] : 0,
+          '#description' => t('If you use a full width layout, you may need to use the class "container-fluid" to avoid marrgin problems.')
+				);								
+				if(empty($item['children'])) {
+					$form['contains'] = array(
+						'#type' => 'select',
+						'#title' => t('Contains'),
+						'#default_value' => isset($item['contains']) ? $item['contains'] : 'container',
+						'#options' => array(
+              'container' => t('Container'),
+              'region' => t('Regions'),
+							'row' => t('Row'),
+						),
+					);			
+				}
+			}
+			break;			
+		case 'row':
+      $form['wrapper'] = array(
+        '#title' => t('Wrapper'),
+        '#type' => 'textfield',
+        '#default_value' => isset($item['wrapper']) ? $item['wrapper'] : 'div',
+        '#description' => t('HTML element for that row'),
+      );
+      $form['element_id_default'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Use default ID'),
+        '#default_value' => isset($item['element_id_default']) ? $item['element_id_default'] : 1,
+        '#description' => t('Add the default ID like #panel-bootstrap-column-main-column to this container.')
+      );
+      $form['element_id'] = array(
+        '#title' => t('ID'),
+        '#type' => 'textfield',
+        '#default_value' => isset($item['element_id']) ? $item['element_id'] : '',
+        '#description' => t('Define a custom ID for this element'),
+        '#states' => array(
+          'visible' => array(
+            'input[name="element_id_default"]' => array('checked' => FALSE)
+          )
+        ),
+      );
+      $form['class_default_add'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Add default classes'),
+        '#default_value' => isset($item['class_default_add']) ? $item['class_default_add'] : 1,
+        '#description' => t('Add the default classes like .row, .panels-bootstrap-row, .inside, .row-inside-first etc to this container.')
+      );      
+			$form['class'] = array(
+				'#title' => t('CSS class'),
+				'#type' => 'textfield',
+				'#default_value' => isset($item['class']) ? $item['class'] : '',
+				'#description' => t('Enter a CSS class that will be used. This can be used to apply automatic styling from your theme, for example.'),
+        '#states' => array(
+          'visible' => array(
+            'input[name="class_default_add"]' => array('checked' => FALSE)
+          )
+        ),        
+			);
+			break;			
+		case 'column':
+      $form['wrapper'] = array(
+        '#title' => t('Wrapper'),
+        '#type' => 'textfield',
+        '#default_value' => isset($item['wrapper']) ? $item['wrapper'] : 'div',
+        '#description' => t('HTML element for that column'),
+      );
+      $form['element_id_default'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Use default ID'),
+        '#default_value' => isset($item['element_id_default']) ? $item['element_id_default'] : 1,
+        '#description' => t('Add the default ID like #panel-bootstrap-column-main-column to this container.')
+      );
+      $form['element_id'] = array(
+        '#title' => t('ID'),
+        '#type' => 'textfield',
+        '#default_value' => isset($item['element_id']) ? $item['element_id'] : '',
+        '#description' => t('Define a custom ID for this element'),
+        '#states' => array(
+          'visible' => array(
+            'input[name="element_id_default"]' => array('checked' => FALSE)
+          )
+        ),
+      );
+      $form['class_default_add'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Add default classes'),
+        '#default_value' => isset($item['class_default_add']) ? $item['class_default_add'] : 1,
+        '#description' => t('Add the default classes like .row, .panels-bootstrap-row, .inside, .row-inside-first etc to this container.')
+      );      
+			$form['class'] = array(
+				'#title' => t('CSS class'),
+				'#type' => 'textfield',
+				'#default_value' => isset($item['class']) ? $item['class'] : '',
+				'#description' => t('Enter a CSS class that will be used. This can be used to apply automatic styling from your theme, for example.'),
+        '#states' => array(
+          'visible' => array(
+            'input[name="class_default_add"]' => array('checked' => FALSE)
+          )
+        ),        
+			);
+			if(empty($item['children'])) {
+				$form['contains'] = array(
+					'#type' => 'select',
+					'#title' => t('Contains'),
+					'#default_value' => isset($item['contains']) ? $item['contains'] : 'region',
+					'#options' => array(
+						'region' => t('Regions'),				
+						'row' => t('Row'),			
+					),
+				);
+			}
+			break;
+		case 'region':
+			$form['title'] = array(
+				'#title' => t('Region title'),
+				'#type' => 'textfield',
+				'#default_value' => $item['title'],
+				'#required' => TRUE,
+			);
+      $form['wrapper'] = array(
+        '#title' => t('Wrapper'),
+        '#type' => 'textfield',
+        '#default_value' => isset($item['wrapper']) ? $item['wrapper'] : 'div',
+        '#description' => t('HTML element for the region'),
+      );
+      $form['element_id_default'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Use default ID'),
+        '#default_value' => isset($item['element_id_default']) ? $item['element_id_default'] : 1,
+        '#description' => t('Add the default ID like #panel-bootstrap-column-main-column to this container.')
+      );
+      $form['element_id'] = array(
+        '#title' => t('ID'),
+        '#type' => 'textfield',
+        '#default_value' => isset($item['element_id']) ? $item['element_id'] : '',
+        '#description' => t('Define a custom ID for this element'),
+        '#states' => array(
+          'visible' => array(
+            'input[name="element_id_default"]' => array('checked' => FALSE)
+          )
+        ),
+      );
+      $form['class_default_add'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Add default classes'),
+        '#default_value' => isset($item['class_default_add']) ? $item['class_default_add'] : 1,
+        '#description' => t('Add the default classes like .row, .panels-bootstrap-row, .inside, .row-inside-first etc to this container.')
+      );
+			$form['class'] = array(
+				'#title' => t('CSS class'),
+				'#type' => 'textfield',
+				'#default_value' => isset($item['class']) ? $item['class'] : '',
+				'#description' => t('Enter a CSS class that will be used. This can be used to apply automatic styling from your theme, for example.'),
+        '#states' => array(
+          'visible' => array(
+            'input[name="class_default_add"]' => array('checked' => FALSE)
+          )
+        ),        
+			);
+      $form['container_class_add'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Add container class'),
+        '#default_value' => isset($item['container_class_add']) ? $item['container_class_add'] : 0,
+        '#description' => t('Add class "container" to this container')
+      );
+      $form['container_fluid_class_add'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Add container-fluid class'),
+        '#default_value' => isset($item['container_fluid_class_add']) ? $item['container_fluid_class_add'] : 0,
+        '#description' => t('If you use a full width layout, you may need to use the class "container-fluid" to avoid marrgin problems.')
+      );				
+			break;
+		default:
+			break;
+	}
 
   $form['save'] = array(
     '#type' => 'submit',
@@ -874,34 +1144,54 @@ function panels_bootstrap_config_item_form($form, &$form_state) {
  */
 function panels_bootstrap_config_item_form_submit(&$form, &$form_state) {
   $item = &$form_state['item'];
-  if ($item['type'] == 'region') {
-    $item['title'] = $form_state['values']['title'];
-  }
+	
+	switch($item['type']) {
+		case 'container':
+		  $item['wrapper'] = $form_state['values']['wrapper'];
+      $item['element_id_default'] = $form_state['values']['element_id_default'];
+		  $item['element_id'] = $form_state['values']['element_id'];
+		  $item['class'] = $form_state['values']['class'];
+      $item['class_default_add'] = $form_state['values']['class_default_add'];
 
-  $item['class'] = $form_state['values']['class'];
-
-  if ($form_state['id'] == 'canvas') {
-    $item['column_class'] = $form_state['values']['column_class'];
-    $item['row_class'] = $form_state['values']['row_class'];
-    $item['region_class'] = $form_state['values']['region_class'];
-    // Reverse this as the checkbox is backward from how we actually store
-    // it to make it simpler to default to scaling.
-    $item['no_scale'] = !$form_state['values']['no_scale'];
-    $item['grid_type'] = $form_state['values']['grid_type'];
-    $item['column_separation'] = $form_state['values']['column_separation'];
-    $item['region_separation'] = $form_state['values']['region_separation'];
-    $item['row_separation'] = $form_state['values']['row_separation'];
-  }
-  else if ($item['type'] != 'row') {
-
-  }
-  else if ($item['type'] == 'row') {
-    $item['grid_type'] = $form_state['values']['grid_type'];
-  }
-  else {
-    $item['contains'] = $form_state['values']['contains'];
-  }
-
+			if(!empty($form_state['values']['contains'])) $item['contains'] = $form_state['values']['contains'];
+			$item['container_class_add'] = $form_state['values']['container_class_add'];
+			$item['container_fluid_class_add'] = $form_state['values']['container_fluid_class_add'];
+			
+			if ($form_state['id'] == 'canvas') {
+				$item['column_class'] = $form_state['values']['column_class'];
+				$item['row_class'] = $form_state['values']['row_class'];
+				$item['region_class'] = $form_state['values']['region_class'];
+				$item['container_class'] = $form_state['values']['container_class'];
+			}
+			break;
+		case 'row':
+		  $item['wrapper'] = $form_state['values']['wrapper'];
+      $item['element_id_default'] = $form_state['values']['element_id_default'];
+		  $item['element_id'] = $form_state['values']['element_id'];
+		  $item['class'] = $form_state['values']['class'];
+      $item['class_default_add'] = $form_state['values']['class_default_add'];
+			break;
+		case 'column':
+		  $item['wrapper'] = $form_state['values']['wrapper'];
+      $item['element_id_default'] = $form_state['values']['element_id_default'];
+		  $item['element_id'] = $form_state['values']['element_id'];
+		  $item['class'] = $form_state['values']['class'];
+      $item['class_default_add'] = $form_state['values']['class_default_add'];
+			if(!empty($form_state['values']['contains'])) $item['contains'] = $form_state['values']['contains'];
+			break;
+		case 'region':
+			$item['title'] = $form_state['values']['title'];
+		  $item['wrapper'] = $form_state['values']['wrapper'];
+      $item['element_id_default'] = $form_state['values']['element_id_default'];
+		  $item['element_id'] = $form_state['values']['element_id'];
+		  $item['class'] = $form_state['values']['class'];
+		  $item['class_default_add'] = $form_state['values']['class_default_add'];
+			$item['container_class_add'] = $form_state['values']['container_class_add'];
+			$item['container_fluid_class_add'] = $form_state['values']['container_fluid_class_add'];
+			break;
+		default:
+			break;
+	}
 }
 
 /**
@@ -920,43 +1210,79 @@ function panels_ajax_bootstrap_edit_add($handler, $id, $location = 'left') {
   $parent = &$settings['items'][$id];
 
   switch ($parent['type']) {
-    case 'column':
-      $title = t('Add row');
-      // Create the new item with defaults.
-      $item = array(
-        'type' => 'row',
-        'contains' => 'region',
-        'children' => array(),
-        'parent' => $id,
-      );
-      break;
-    case 'row':
-      switch ($parent['contains']) {
-        case 'region':
-          $title = $location == 'left' ? t('Add region to left') : t('Add region to right');
+		case 'container':
+			switch($parent['contains']) {
+				case 'container':
+          $title = $location == 'left' ? t('Add container to top') : t('Add container to bottom');
+          $item = array(
+            'type' => 'container',
+            'title' => '',
+						'children' => array(),
+            'parent' => $id,
+          );
+          break;									
+				case 'row':
+					$title = t('Add row');
+					$item = array(
+						'type' => 'row',
+						'contains' => 'region',
+						'children' => array(),
+						'parent' => $id,
+					);
+					break;
+				case 'region':
+          $title = $location == 'left' ? t('Add region to top') : t('Add region to bottom');
           $item = array(
             'type' => 'region',
             'title' => '',
-            'bootstrap_class' => 'span1',
-            'grid_type' => 'row',
             'parent' => $id,
           );
           break;
-        case 'column':
-          $title = $location == 'left' ? t('Add column to left') : t('Add column to right');
+				}		
+			break;
+    case 'row':
+			$title = $location == 'left' ? t('Add column to left') : t('Add column to right');
+			$item = array(
+				'type' => 'column',
+				'parent' => $id,
+				'children' => array(),
+			);
+			break;				
+    case 'column':
+			switch($parent['contains']) {
+				case 'container':
+          $title = $location == 'left' ? t('Add container to top') : t('Add container to bottom');
           $item = array(
-            'type' => 'column',
-            'grid_type' => 'row',
+            'type' => 'container',
+            'title' => '',
+						'children' => array(),
             'parent' => $id,
-            'children' => array(),
+          );
+          break;													
+				case 'row':
+					$title = t('Add row');
+					// Create the new item with defaults.
+					$item = array(
+						'type' => 'row',
+						'contains' => 'region',
+						'children' => array(),
+						'parent' => $id,
+					);
+					break;
+				case 'region':
+          $title = $location == 'left' ? t('Add region to top') : t('Add region to bottom');
+          $item = array(
+            'type' => 'region',
+            'title' => '',
+            'parent' => $id,
           );
           break;
-      }
-      // Create the new item with defaults.
-      break;
+				}
     case 'region':
       // Cannot add items to regions.
       break;
+		default:
+			break;
   }
 
   $form_state = array(
@@ -1068,6 +1394,7 @@ function panels_ajax_bootstrap_edit_add($handler, $id, $location = 'left') {
     $output[] = ajax_command_replace('.bootstrap-links-' . $id,
       panels_bootstrap_render_item_links($renderer, $id, $parent));
 
+
     $output[] = array(
       'command' => 'bootstrap_fix_firstlast',
       'selector' => '.' . $parent_class . '-inside',
@@ -1091,50 +1418,208 @@ function panels_bootstrap_add_item_form($form, &$form_state) {
   $settings = &$form_state['settings'];
   $location = &$form_state['location'];
   $id = &$form_state['id'];
-
-
-  if ($item['type'] == 'row' || $item['type']== 'canvas'){
-    $form['grid_type'] = array(
-      '#type' => 'select',
-      '#title' => t('Grid type'),
-      '#default_value' => $item['grid_type'],
-      '#options' => array(
-        'row-fluid' => t('Fluid'),
-        'row' => t('Basic'),
-      ),
-    );
-  }
-
-  if ($item['type'] == 'region') {
-    $form['title'] = array(
-      '#title' => t('Region title'),
-      '#type' => 'textfield',
-      '#default_value' => $item['title'],
-      '#required' => TRUE,
-    );
-  }
-
-  $form['class'] = array(
-    '#title' => t('CSS Class'),
-    '#type' => 'textfield',
-    '#default_value' => isset($item['class']) ? $item['class'] : '',
-    '#description' => t('Enter a CSS class that will be used. This can be used to apply automatic styling from your theme, for example.'),
-  );
-
-  if ($item['type'] != 'row') {
-    // now config for the row
-  }
-  else {
-    $form['contains'] = array(
-      '#type' => 'select',
-      '#title' => t('Contains'),
-      '#default_value' => $item['contains'],
-      '#options' => array(
-        'region' => t('Regions'),
-        'column' => t('Columns'),
-      ),
-    );
-  }
+	
+	switch($item['type']) {
+		case 'container':
+      $form['wrapper'] = array(
+        '#title' => t('Wrapper'),
+        '#type' => 'textfield',
+        '#default_value' => isset($item['wrapper']) ? $item['wrapper'] : 'div',
+        '#description' => t('HTML element for that container'),
+      );
+      $form['element_id_default'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Use default ID'),
+        '#default_value' => isset($item['element_id_default']) ? $item['element_id_default'] : 1,
+        '#description' => t('Add the default ID like #panel-bootstrap-column-main-column to this container.')
+      );
+			$form['element_id'] = array(
+				'#title' => t('ID'),
+				'#type' => 'textfield',
+				'#default_value' => isset($item['id']) ? $item['id'] : '',
+				'#description' => t('Define a custom IF for this element'),
+        '#states' => array(
+          'visible' => array(
+            'input[name="element_id_default"]' => array('checked' => FALSE)
+          )
+        ),
+			); 
+			$form['class'] = array(
+				'#title' => t('CSS Class'),
+				'#type' => 'textfield',
+				'#default_value' => isset($item['class']) ? $item['class'] : '',
+				'#description' => t('Enter a CSS class that will be used. This can be used to apply automatic styling from your theme, for example.'),
+			);
+      $form['class_default_add'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Add default classes'),
+        '#default_value' => isset($item['class_default_add']) ? $item['class_default_add'] : 1,
+        '#description' => t('Add the default classes like .row, .panels-bootstrap-row, .inside, .row-inside-first etc to this container.')
+      );
+			$form['container_class_add'] = array(
+				'#type' => 'checkbox',
+				'#title' => t('Add container class'),
+				'#default_value' => isset($item['container_class_add']) ? $item['container_class_add'] : 0,
+				'#description' => t('Add class "container" to this container')
+			);
+			$form['container_fluid_class_add'] = array(
+				'#type' => 'checkbox',
+				'#title' => t('Add container-fluid class'),
+				'#default_value' => isset($item['container_fluid_class_add']) ? $item['container_fluid_class_add'] : 0,
+        '#description' => t('If you use a full width layout, you may need to use the class "container-fluid" to avoid marrgin problems.')
+			);				
+			$form['contains'] = array(
+				'#type' => 'select',
+				'#title' => t('Contains'),
+				'#default_value' => isset($item['contains']) ? $item['contains'] : 'container',
+				'#options' => array(
+          'container' => t('Container'),
+          'region' => t('Regions'),
+					'row' => t('Row'),
+				),
+			);					
+			break;		
+		case 'row':
+      $form['wrapper'] = array(
+        '#title' => t('Wrapper'),
+        '#type' => 'textfield',
+        '#default_value' => isset($item['wrapper']) ? $item['wrapper'] : 'div',
+        '#description' => t('HTML element for that row'),
+      );
+      $form['element_id_default'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Use default ID'),
+        '#default_value' => isset($item['element_id_default']) ? $item['element_id_default'] : 1,
+        '#description' => t('Add the default ID like #panel-bootstrap-column-main-column to this container.')
+      );
+			$form['element_id'] = array(
+				'#title' => t('ID'),
+				'#type' => 'textfield',
+				'#default_value' => isset($item['id']) ? $item['id'] : '',
+				'#description' => t('Define a custom IF for this element'),
+        '#states' => array(
+          'visible' => array(
+            'input[name="element_id_default"]' => array('checked' => FALSE)
+          )
+        ),
+			); 
+			$form['class'] = array(
+				'#title' => t('CSS Class'),
+				'#type' => 'textfield',
+				'#default_value' => isset($item['class']) ? $item['class'] : '',
+				'#description' => t('Enter a CSS class that will be used. This can be used to apply automatic styling from your theme, for example.'),
+			);
+      $form['class_default_add'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Add default classes'),
+        '#default_value' => isset($item['class_default_add']) ? $item['class_default_add'] : 1,
+        '#description' => t('Add the default classes like .row, .panels-bootstrap-row, .inside, .row-inside-first etc to this container.')
+      );
+			break;		
+		case 'column':
+      $form['wrapper'] = array(
+        '#title' => t('Wrapper'),
+        '#type' => 'textfield',
+        '#default_value' => isset($item['wrapper']) ? $item['wrapper'] : 'div',
+        '#description' => t('HTML element for that column'),
+      );
+      $form['element_id_default'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Use default ID'),
+        '#default_value' => isset($item['element_id_default']) ? $item['element_id_default'] : 1,
+        '#description' => t('Add the default ID like #panel-bootstrap-column-main-column to this container.')
+      );
+			$form['element_id'] = array(
+				'#title' => t('ID'),
+				'#type' => 'textfield',
+				'#default_value' => isset($item['id']) ? $item['id'] : '',
+				'#description' => t('Define a custom IF for this element'),
+        '#states' => array(
+          'visible' => array(
+            'input[name="element_id_default"]' => array('checked' => FALSE)
+          )
+        ),
+			); 
+			$form['class'] = array(
+				'#title' => t('CSS Class'),
+				'#type' => 'textfield',
+				'#default_value' => isset($item['class']) ? $item['class'] : '',
+				'#description' => t('Enter a CSS class that will be used. This can be used to apply automatic styling from your theme, for example.'),
+			);
+      $form['class_default_add'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Add default classes'),
+        '#default_value' => isset($item['class_default_add']) ? $item['class_default_add'] : 1,
+        '#description' => t('Add the default classes like .row, .panels-bootstrap-row, .inside, .row-inside-first etc to this container.')
+      );
+			$form['contains'] = array(
+				'#type' => 'select',
+				'#title' => t('Contains'),
+				'#default_value' => isset($item['contains']) ? $item['contains'] : 'region',
+				'#options' => array(
+					'region' => t('Regions'),									
+					'row' => t('Row'),
+				),
+			);
+			break;
+		case 'region':
+			$form['title'] = array(
+				'#title' => t('Region title'),
+				'#type' => 'textfield',
+				'#default_value' => $item['title'],
+				'#required' => TRUE,
+			);
+      $form['wrapper'] = array(
+        '#title' => t('Wrapper'),
+        '#type' => 'textfield',
+        '#default_value' => isset($item['wrapper']) ? $item['wrapper'] : 'div',
+        '#description' => t('HTML element for that region'),
+      );
+      $form['element_id_default'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Use default ID'),
+        '#default_value' => isset($item['element_id_default']) ? $item['element_id_default'] : 1,
+        '#description' => t('Add the default ID like #panel-bootstrap-column-main-column to this container.')
+      );
+			$form['element_id'] = array(
+				'#title' => t('ID'),
+				'#type' => 'textfield',
+				'#default_value' => isset($item['id']) ? $item['id'] : '',
+				'#description' => t('Define a custom IF for this element'),
+        '#states' => array(
+          'visible' => array(
+            'input[name="element_id_default"]' => array('checked' => FALSE)
+          )
+        ),
+			);
+			$form['class'] = array(
+				'#title' => t('CSS Class'),
+				'#type' => 'textfield',
+				'#default_value' => isset($item['class']) ? $item['class'] : '',
+				'#description' => t('Enter a CSS class that will be used. This can be used to apply automatic styling from your theme, for example.'),
+			);
+      $form['class_default_add'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Add default classes'),
+        '#default_value' => isset($item['class_default_add']) ? $item['class_default_add'] : 1,
+        '#description' => t('Add the default classes like .row, .panels-bootstrap-row, .inside, .row-inside-first etc to this container.')
+      );
+      $form['container_class_add'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Add container class'),
+        '#default_value' => isset($item['container_class_add']) ? $item['container_class_add'] : 0,
+        '#description' => t('Add class "container" to this container')
+      );
+      $form['container_fluid_class_add'] = array(
+        '#type' => 'checkbox',
+        '#title' => t('Add container-fluid class'),
+        '#default_value' => isset($item['container_fluid_class_add']) ? $item['container_fluid_class_add'] : 0,
+        '#description' => t('If you use a full width layout, you may need to use the class "container-fluid" to avoid marrgin problems.')
+      );				      
+			break;
+		default:
+			break;
+	}
 
   $form['save'] = array(
     '#type' => 'submit',
@@ -1152,21 +1637,46 @@ function panels_bootstrap_add_item_form_submit(&$form, &$form_state) {
   $parent = &$form_state['parent'];
   $location = &$form_state['location'];
   $settings = &$form_state['settings'];
-
-  $item['class'] = $form_state['values']['class'];
-
-  if ($item['type'] == 'region') {
-    $item['title'] = $form_state['values']['title'];
-  }
-
-  if ($item['type'] != 'row') {
-    
-  }elseif ($item['type'] == 'row'){
-    $item['grid_type'] = $form_state['values']['grid_type'];
-  }
-  else {
-    $item['contains'] = $form_state['values']['contains'];
-  }
+	
+	switch($item['type']) {
+		case 'container':
+			$item['wrapper'] = $form_state['values']['wrapper'];
+      $item['element_id_default'] = $form_state['values']['element_id_default'];
+      $item['element_id'] = $form_state['values']['element_id'];
+			$item['class'] = $form_state['values']['class'];
+      $item['class_default_add'] = $form_state['values']['class_default_add'];
+			$item['container_class_add'] = $form_state['values']['container_class_add'];
+			$item['container_fluid_class_add'] = $form_state['values']['container_fluid_class_add'];
+			$item['contains'] = $form_state['values']['contains'];
+			break;
+		case 'row':
+			$item['wrapper'] = $form_state['values']['wrapper'];
+      $item['element_id_default'] = $form_state['values']['element_id_default'];
+			$item['element_id'] = $form_state['values']['element_id'];
+			$item['class'] = $form_state['values']['class'];
+			$item['class_default_add'] = $form_state['values']['class_default_add'];
+			break;
+		case 'column':
+			$item['wrapper'] = $form_state['values']['wrapper'];
+      $item['element_id_default'] = $form_state['values']['element_id_default'];
+			$item['element_id'] = $form_state['values']['element_id'];
+			$item['class'] = $form_state['values']['class'];
+      $item['class_default_add'] = $form_state['values']['class_default_add'];
+			$item['contains'] = $form_state['values']['contains'];
+			break;			
+		case 'region':
+	    $item['title'] = $form_state['values']['title'];
+			$item['wrapper'] = $form_state['values']['wrapper'];
+      $item['element_id_default'] = $form_state['values']['element_id_default'];
+			$item['element_id'] = $form_state['values']['element_id'];
+			$item['class'] = $form_state['values']['class'];
+      $item['class_default_add'] = $form_state['values']['class_default_add'];
+			$item['container_class_add'] = $form_state['values']['container_class_add'];
+			$item['container_fluid_class_add'] = $form_state['values']['container_fluid_class_add'];
+			break;
+		default:
+			break;
+	}
 
   if ($item['type'] == 'region') {
     // derive the region key from the title
@@ -1175,8 +1685,7 @@ function panels_bootstrap_add_item_form_submit(&$form, &$form_state) {
       $key .= '_';
     }
     $form_state['key'] = $key;
-  }
-  else {
+  } else {
     $form_state['key'] = $key = max(array_keys($settings['items'])) + 1;
   }
 
@@ -1186,20 +1695,16 @@ function panels_bootstrap_add_item_form_submit(&$form, &$form_state) {
     // necessary.
     if ($location == 'left') {
       $form_state['sibling'] = reset($parent['children']);
-    }
-    else {
+    } else {
       $form_state['sibling'] = end($parent['children']);
-
     }
-
   }
 
   // Place the item.
   $settings['items'][$key] = $item;
   if ($location == 'left') {
     array_unshift($parent['children'], $key);
-  }
-  else {
+  } else {
     $parent['children'][] = $key;
   }
 }
@@ -1220,7 +1725,6 @@ function panels_ajax_bootstrap_edit_remove($handler, $id) {
   $css_id = isset($handler->display->css_id) ? $handler->display->css_id : '';
   // Create a renderer object so we can render our new stuff.
   $renderer = panels_bootstrap_create_renderer(TRUE, $css_id, array(), $settings, $handler->display, $handler->plugins['layout'], $handler);
-
 
   $siblings = &$settings['items'][$item['parent']]['children'];
   $parent_class = '.'  . $renderer->base[$settings['items'][$item['parent']]['type']] . '-' . $item['parent'];
@@ -1301,8 +1805,9 @@ function panels_ajax_bootstrap_edit_resize($handler) {
   ctools_include('ajax');
   $settings = &$handler->display->layout_settings;
   panels_bootstrap_convert_settings($settings, $handler->plugins['layout']);
-
-  $settings['items'][$_POST['item']]['bootstrap_class'] = $_POST['bootstrap_class'];
+  $bootstrap_class = $_POST['bootstrap_class'];
+  $bootstrap_screen = $_POST['bootstrap_screen'];
+  $settings['items'][$_POST['item']]['bootstrap_class'][$bootstrap_screen] = $bootstrap_class;
 
   // Save our new state.
   panels_edit_cache_set($handler->cache);
