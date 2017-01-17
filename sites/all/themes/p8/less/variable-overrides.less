@@ -11,9 +11,31 @@
 
 @brand-primary:         #0298d8;
 @brand-success:         #1b326d;
-@brand-info:             #d7d4d5;
+@brand-info:            #d7d4d5;
+@brand-warning:         #E60203;
 @link-hover-decoration: none;
+body {
+  color: #696969;
+  font-size: 13.5px;
+  line-height: 170%;
+  font-family: "Titillium Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 300;
+}
+h1, h2, h3 {
+  font-family: "Helvetica Neue";
+  font-weight: 700;
+}
+p {
+  margin-bottom: 25px;
+}
+.glyphicon {
+  color: @brand-primary;
+}
+.btn-primary {
+  border-color: @brand-primary;
+}
 
+/* HEADER */
 @navbar-default-color:             #fff;
 @navbar-default-bg:                @brand-primary;
 @navbar-default-border:            @navbar-default-bg;
@@ -21,27 +43,78 @@
 @navbar-default-link-hover-color:          @brand-success;
 @navbar-default-link-active-color:         @brand-success;
 @navbar-default-link-active-bg:            transparent;
-
 .navbar-header {
     width: 100%;
 }
 .language-link {
   display: none;
 }
-.view-hp-carousel .view-footer {
-  position: absolute;
-  bottom: 100px;
-  left: 320px;
-  width: 45%;
-  text-align: center;
+.page-header {
+  border-bottom: none;
+  margin-top: 30px;
 }
-.view-hp-carousel .carousel img{
-  opacity: 0.3;
+.main-container .region-content {
+  margin-bottom: 20px;
 }
-.header-background {
-  background-image: url('../images/example_img1_1200x465.jpg');
+/* PREFOOTER */
+.prefooter {
+  background-color: #f5f5f5;
+  display: block;
 }
-#page-header .header-background, .header-frost {
+.region-prefooter {
+  h2 {
+    text-align: center;
+    padding-bottom: 20px;
+    margin-top: 0;
+    border-bottom: 3px solid #0298d8;
+  }
+  .block-panels-mini .panels-flexible-region {
+    padding: 0 10px;
+  }
+  .panels-bootstrap-column {
+    margin-bottom: 40px;
+}
+  // .panels-flexible-region-16-sales,
+  // .panels-flexible-region-16-log_in,
+  // .panels-flexible-region-16-center {
+  //   border-right: 3px solid #fff;
+  // }
+}
+
+#mini-panel-quicklinks {
+  padding: 40px 20px;
+  a {
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+  p {
+    margin-bottom: 10px;
+  }
+}
+
+/* FOOTER */
+.footer {
+  background-color: @brand-primary;
+  color: #fff;
+  margin-top: 0;
+  a {
+    color: #fff;
+  }
+}
+
+// /* SIDEBAR */
+// .region-sidebar-first .block {
+//     display: inline-block;
+//     width: 100%;
+//     .well;
+//     border-top: 3px solid @brand-primary;
+// }
+
+/* Homepage */
+#page-header {
+  margin-bottom: 20px;
+  .header-background,
+  .header-frost {
   margin-top:-13px;
   margin-bottom:15px;
   background-size: cover;
@@ -49,63 +122,127 @@
   padding-top:13px;
   height: 500px;
   width: 100%;
+  }
+  .header-background {
+    background-image: url('../images/example_img1_1200x465.jpg');
+  }
+  .header-frost {
+    background-color: #eee;
+    opacity: 0.7;
+    position: absolute;
+    top: 64px;
+  }
+  .container {
+    margin-top: -470px;
+    height: 450px;
+    #block-block-9 {
+      font-weight: 500;
+      p {
+        font-size: 1.3em;
+        text-shadow: 2px 2px 15px #fff;
+        font-family: "Helvetica Neue";
+      }
+      h2 {
+        text-shadow: 2px 2px 15px #fff;
+      }
+      @media (min-width: @screen-lg-min) {
+        padding: 0 200px;
+      }
+    }
+  }
 }
-.header-frost {
-  background-color: #eee;
-  opacity: 0.7;
-  position: absolute;
-  top: 94px;
+.main-container {
+  margin-bottom: 20px;
 }
-#page-header .container {
-  margin-top: -470px;
-  padding-bottom: 72px;
+
+/*Landing pages*/
+.page-products .main-container {
+    margin-top: -13px;
+    margin-bottom: 0;
+    padding-top: 13px;
+  .views-bootstrap-grid-plugin-style {
+    h3 {
+      background-color: @brand-primary;
+      border-radius: 0 0 10px 10px;
+      margin-top: 0;
+      padding: 10px;
+      text-align: center;
+      a {
+        color: #fff;
+      }
+    }
+    h3:hover {
+      background-color: #0274a5;
+    }
+    .img-rounded {
+      border-radius: 10px 10px 0 0;
+    }
+  }
 }
-.region-header .block {
-  font-weight: 500;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
-  padding: 0 200px;
-}
-.view-aktuellt .carousel {
-  padding-top: 15px;
-}
-.main-container img,
-.carousel-control {
-  .img-rounded;
-  .img-responsive;
-}
-.main-container .block-block img {
-  .center-block;
-}
-.main-container .block-block p {
-    .text-center;
-}
-.view-hp-carousel .view-footer .lead {
-  font-weight: 500;
-  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
-}
-.footer {
-  background-color: @brand-info;
-  .container-fluid;
-}
-.footer .block,
-.region-sidebar-first .block {
+.page-nyheter, .page-nyheder, .page-news {
+  .views-field-field-image {
+    border-radius: 10px 10px 0 0;
+    float: left;
     display: inline-block;
+    margin-right: 20px;
+    img {
+      margin-bottom: 20px;
+    }
+  }
+  .views-row {
+    min-height: 240px;
+    margin-bottom: 20px;
+    position: relative;
+    .views-field-view-node {
+      padding-top: 20px;
+      a {
+        font-size: 1.2em;
+        font-weight: bold;
+      }
+    }
+  }
 }
-.footer .block {
-    width: auto;
+.submitted-by {
+  color: @brand-info;
 }
-.region-sidebar-first .block {
-    width: 100%;
-    .well;
-    border-top: 3px solid @brand-primary;
+
+/* Other pages */
+.node-type-article img {
+  float: right;
+  margin-left: 20px;
 }
-table {
-    width: 100%;
-    .text-center;
-}
-.region-footer {
-  .text-center;
-}
+
+// .region-prefooter #panel-bootstrap-region-right {
+//   margin-top: 10px;
+// }
+// .view-aktuellt .carousel {
+//   padding-top: 15px;
+// }
+// .main-container img,
+// .carousel-control {
+//   .img-rounded;
+//   .img-responsive;
+// }
+// .main-container .block-block img {
+//   .center-block;
+// }
+// .main-container .block-block p {
+//     .text-center;
+// }
+// .view-hp-carousel .view-footer .lead {
+//   font-weight: 500;
+//   text-shadow: 0 1px 2px rgba(255, 255, 255, 0.6);
+// }
+
+//
 .views-bootstrap-grid-plugin-style .col {
   padding-bottom: 20px;
+}
+.field-name-field-image img {
+  margin: auto;
+  padding-top: 20px;
+  border-radius: 6px;
+  @media (min-width: @screen-sm-min) {
+    padding-top: 0;
+  }
 }

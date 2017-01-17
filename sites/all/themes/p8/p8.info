@@ -15,6 +15,7 @@ regions[help]           = 'Help'
 regions[content]        = 'Content'
 regions[sidebar_first]  = 'Primary'
 regions[sidebar_second] = 'Secondary'
+regions[prefooter]      = 'Prefooter'
 regions[footer]         = 'Footer'
 regions[page_top]       = 'Page top'
 regions[page_bottom]    = 'Page bottom'
@@ -25,7 +26,6 @@ regions[page_bottom]    = 'Page bottom'
 ;;;;;;;;;;;;;;;;;;;;;
 
 stylesheets[all][] = css/style.css
-
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Scripts
@@ -43,6 +43,10 @@ scripts[] = 'bootstrap/js/popover.js'
 scripts[] = 'bootstrap/js/scrollspy.js'
 scripts[] = 'bootstrap/js/tab.js'
 scripts[] = 'bootstrap/js/transition.js'
+fonts[google_fonts_api][] = "Titillium Web&subset=latin#200"
+fonts[google_fonts_api][] = "Titillium Web&subset=latin#300"
+fonts[google_fonts_api][] = "Titillium Web&subset=latin#700"
+
 
 ; Disable BootstrapCDN so the compiled LESS source files can be used.
 settings[bootstrap_cdn] = ''

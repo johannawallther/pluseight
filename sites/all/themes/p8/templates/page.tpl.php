@@ -179,6 +179,18 @@
   </div>
 </div>
 
+<?php if (!empty($page['prefooter'])): ?>
+  <prefooter class="prefooter">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <?php print render($page['prefooter']); ?>
+        </div>
+      </div>
+    </div>
+  </prefooter>
+<?php endif; ?>
+
 <?php if (!empty($page['footer'])): ?>
   <footer class="footer">
     <div class="container">
