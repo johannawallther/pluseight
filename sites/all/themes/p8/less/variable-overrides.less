@@ -151,8 +151,14 @@ p {
     }
   }
 }
+.logged-in #page-header .header-frost {
+  top: 128px;
+}
 .main-container {
   margin-bottom: 20px;
+}
+.front .main-container .panels-bootstrap-bootstrap_2_columns {
+  padding-bottom: 20px;
 }
 
 /*Landing pages*/
@@ -190,9 +196,12 @@ p {
     }
   }
   .views-row {
-    min-height: 240px;
+    min-height: 370px;
     margin-bottom: 20px;
     position: relative;
+  }
+  .row {
+    margin-bottom: 30px;
     .views-field-view-node {
       padding-top: 20px;
       a {
@@ -202,7 +211,7 @@ p {
     }
   }
 }
-.submitted-by {
+.submitted-by, .views-field-created {
   color: @brand-info;
 }
 

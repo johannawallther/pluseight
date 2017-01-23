@@ -7606,8 +7606,14 @@ p {
     padding: 0 200px;
   }
 }
+.logged-in #page-header .header-frost {
+  top: 128px;
+}
 .main-container {
   margin-bottom: 20px;
+}
+.front .main-container .panels-bootstrap-bootstrap_2_columns {
+  padding-bottom: 20px;
 }
 /*Landing pages*/
 .page-products .main-container {
@@ -7647,22 +7653,28 @@ p {
 .page-nyheter .views-row,
 .page-nyheder .views-row,
 .page-news .views-row {
-  min-height: 240px;
+  min-height: 370px;
   margin-bottom: 20px;
   position: relative;
 }
-.page-nyheter .views-row .views-field-view-node,
-.page-nyheder .views-row .views-field-view-node,
-.page-news .views-row .views-field-view-node {
+.page-nyheter .row,
+.page-nyheder .row,
+.page-news .row {
+  margin-bottom: 30px;
+}
+.page-nyheter .row .views-field-view-node,
+.page-nyheder .row .views-field-view-node,
+.page-news .row .views-field-view-node {
   padding-top: 20px;
 }
-.page-nyheter .views-row .views-field-view-node a,
-.page-nyheder .views-row .views-field-view-node a,
-.page-news .views-row .views-field-view-node a {
+.page-nyheter .row .views-field-view-node a,
+.page-nyheder .row .views-field-view-node a,
+.page-news .row .views-field-view-node a {
   font-size: 1.2em;
   font-weight: bold;
 }
-.submitted-by {
+.submitted-by,
+.views-field-created {
   color: #d7d4d5;
 }
 /* Other pages */
