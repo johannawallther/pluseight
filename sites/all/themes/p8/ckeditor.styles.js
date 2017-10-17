@@ -33,5 +33,34 @@ if(typeof(CKEDITOR) !== 'undefined') {
                             'align' : 'right'
                     }
             }
+
+            /* Heading Styles */
+            {
+                    name : 'Main Title',
+                    element : 'h1',
+                    attributes :
+                    {
+                            'font-size' : '30px',
+                    }
+            }
+            {
+                    name : 'Subtitle',
+                    element : 'h2',
+                    attributes :
+                    {
+                            'font-size' : '24px',
+                    }
+            }
+            {
+                    name : 'Button',
+                    element : 'btn',
+                    attributes :
+                    {
+                            'background-color' : '#E17425',
+                            'color' : '#fff',
+                            'text-transform': 'uppercase',
+                            'padding': '5px 20px',
+                    }
+            }
     ]);
 }

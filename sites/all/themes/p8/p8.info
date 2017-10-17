@@ -9,6 +9,7 @@ base theme = bootstrap
 ;;;;;;;;;;;;;;;;;;;;;
 
 regions[navigation]     = 'Navigation'
+regions[mainmenu]       = 'Main Menu'
 regions[header]         = 'Top Bar'
 regions[highlighted]    = 'Highlighted'
 regions[help]           = 'Help'
@@ -43,8 +44,11 @@ scripts[] = 'bootstrap/js/popover.js'
 scripts[] = 'bootstrap/js/scrollspy.js'
 scripts[] = 'bootstrap/js/tab.js'
 scripts[] = 'bootstrap/js/transition.js'
+fonts[google_fonts_api][] = "Open Sans&subset=latin#300"
+fonts[google_fonts_api][] = "Open Sans&subset=latin#600"
 fonts[google_fonts_api][] = "Titillium Web&subset=latin#200"
 fonts[google_fonts_api][] = "Titillium Web&subset=latin#300"
+fonts[google_fonts_api][] = "Titillium Web&subset=latin#600"
 fonts[google_fonts_api][] = "Titillium Web&subset=latin#700"
 
 

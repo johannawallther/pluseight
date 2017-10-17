@@ -74,22 +74,22 @@
  */
 ?>
 <header id="navbar" role="banner" class="<?php print $navbar_classes; ?>">
-  <div class="<?php print $container_class; ?>">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="navbar-header">
+          <div class="navbar-mobile-header">
+            <div class="<?php print $container_class; ?>">
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-12">
             <?php if ($logo): ?>
-              <a class="logo navbar-btn pull-left" href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>">
+              <div class="logo navbar-btn pull-left"><a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>">
                 <img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" />
               </a>
+            </div>
             <?php endif; ?>
-
             <?php if (!empty($site_name)): ?>
               <a class="name navbar-brand" href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>"><?php print $site_name; ?></a>
             <?php endif; ?>
 
-            <?php if (!empty($primary_nav) || !empty($secondary_nav) || !empty($page['navigation'])): ?>
+            <?php if (!empty($primary_nav) || !empty($secondary_nav)): ?>
               <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="sr-only"><?php print t('Toggle navigation'); ?></span>
                 <span class="icon-bar"></span>
@@ -98,7 +98,20 @@
               </button>
             <?php endif; ?>
 
-            <?php if (!empty($primary_nav) || !empty($secondary_nav) || !empty($page['navigation'])): ?>
+            <?php if (!empty($page['navigation'])): ?>
+              <?php print render($page['navigation']); ?>
+            <?php endif; ?>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="navbar-header">
+    <div class="<?php print $container_class; ?>">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <?php if (!empty($primary_nav) || !empty($secondary_nav)): ?>
               <div class="navbar-collapse collapse">
                 <nav role="navigation">
                   <?php if (!empty($primary_nav)): ?>
@@ -106,9 +119,6 @@
                   <?php endif; ?>
                   <?php if (!empty($secondary_nav)): ?>
                     <?php print render($secondary_nav); ?>
-                  <?php endif; ?>
-                  <?php if (!empty($page['navigation'])): ?>
-                    <?php print render($page['navigation']); ?>
                   <?php endif; ?>
                 </nav>
               </div>
@@ -119,6 +129,18 @@
     </div>
   </div>
 </header>
+
+<?php if (!empty($page['mainmenu'])): ?>
+  <div class="mainmenu">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <?php print render($page['mainmenu']); ?>
+        </div>
+      </div>
+    </div>
+</div>
+<?php endif; ?>
 
 <div class="main-container">
 
@@ -170,7 +192,7 @@
         </section>
 
         <?php if (!empty($page['sidebar_second'])): ?>
-          <aside class="col-sm-3" role="complementary">
+          <aside class="col-sm-3 col-sm-offset-1" role="complementary">
             <?php print render($page['sidebar_second']); ?>
           </aside>  <!-- /#sidebar-second -->
         <?php endif; ?>

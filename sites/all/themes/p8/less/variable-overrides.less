@@ -16,14 +16,25 @@
 @link-hover-decoration: none;
 body {
   color: #696969;
-  font-size: 13.5px;
+  font-size: 14px;
   line-height: 170%;
-  font-family: "Titillium Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Open Sans", Arial, sans-serif;
   font-weight: 300;
+  letter-spacing: 0.03em;
 }
 h1, h2, h3 {
-  font-family: "Helvetica Neue";
+  font-family: "Titillium Web";
   font-weight: 700;
+  margin-bottom: 20px;
+}
+header {
+  font-family: "Titillium Web";
+}
+.btn {
+  background-color: @brand-primary;
+  a {
+    color: #fff;
+  }
 }
 p {
   margin-bottom: 25px;
@@ -36,19 +47,144 @@ p {
 }
 
 /* HEADER */
-@navbar-default-color:             #fff;
-@navbar-default-bg:                @brand-primary;
+@navbar-default-color:             #ddd;
+@navbar-default-bg:                #fff;
 @navbar-default-border:            @navbar-default-bg;
 @navbar-default-link-color:                #fff;
 @navbar-default-link-hover-color:          @brand-success;
 @navbar-default-link-active-color:         @brand-success;
 @navbar-default-link-active-bg:            transparent;
+.navbar {
+  margin-bottom: 0;
+}
 .navbar-header {
     width: 100%;
+    background-color: @brand-primary;
+}
+.navbar-mobile-header {
+  background-color: @brand-primary;
+  @media screen and (min-width: 768px) {
+    background-color: #fff;
+  }
+}
+.navbar-default {
+  border-color: @brand-primary;
+  .navbar-toggle {
+    border-color: #fff;
+    background-color: @brand-primary;
+    margin-left: 15px;
+    .icon-bar {
+    background-color: #fff;
+    }
+  }
+  .navbar-toggle:hover,
+  .navbar-toggle:active {
+    background-color: #0078ac;
+  }
+  .navbar-form {
+    border-color: @brand-primary;
+    padding: 0 20px;
+  }
+}
+.navbar-nav {
+  text-align: center;
+  float: none;
+  li {
+    float: none;
+    @media screen and (min-width: 768px) {
+      display: inline-block;
+      a {
+        font-size: 17px;
+        text-transform: uppercase;
+      }
+    }
+  }
+  .open .dropdown-menu {
+    @media (max-width: 768px) {
+      text-align: center;
+    }
+  }
+}
+.navbar-collapse {
+  border-color: @brand-primary;
+  border-top: none;
+}
+ul.secondary {
+  float: none;
+  @media screen and (min-width: 768px) {
+    display: none;
+  }
+}
+.logo {
+  img {
+    height: 36px;
+  }
+  @media screen and (min-width: 768px) {
+    padding: 10px 0;
+    img {
+      height: 100%;
+    }
+  }
+}
+.region-navigation {
+  display: inline-block;
+  float: right;
+  #block-block-16,
+  #block-block-17 {
+    display: none;
+    @media screen and (min-width: 768px) {
+      display: block;
+      float: right;
+      padding: 32px 20px 32px 0;
+      a {
+        color: #696969;
+        text-transform: uppercase;
+        font-size: 0.8571em; /*12px*/
+        font-weight: 600;
+      }
+      a:hover {
+        color: @brand-primary;
+      }
+    }
+  }
+  #block-block-8 {
+    display: inline-block;
+    padding-top: 10px;
+    a {
+      text-transform: uppercase;
+      font-size: 0.8571em; /*12px*/
+    }
+   .btn:hover {
+    background-color: #0078ac;
+    }
+    @media screen and (min-width: 768px) {
+      // float: right;
+      padding: 28px 10px 28px 0;
+    }
+  }
+  #block-lang-dropdown-language {
+    display: inline-block;
+    float: right;
+    padding-top: 8px;
+    @media screen and (min-width: 768px) {
+      float: none;
+      padding: 20px 0 10px 0;
+    }
+  }
 }
 .language-link {
   display: none;
 }
+// #nice-menu-2,
+// #block-nice-menus-2,
+// .region-navigation section,
+// #block-block-8 {
+//   display: inline-block;
+// }
+// #block-block-8 {
+//   background-color: #fff;
+//   float: right;
+// }
 .page-header {
   border-bottom: none;
   margin-top: 30px;
@@ -66,7 +202,10 @@ p {
     text-align: center;
     padding-bottom: 20px;
     margin-top: 0;
-    border-bottom: 3px solid #0298d8;
+    border-bottom: 3px solid @brand-primary;
+  }
+  a {
+    font-family: "Titillium Web";
   }
   .block-panels-mini .panels-flexible-region {
     padding: 0 10px;
@@ -112,10 +251,10 @@ p {
 
 /* Homepage */
 #page-header {
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   .header-background,
   .header-frost {
-  margin-top:-13px;
+  // margin-top:-13px;
   margin-bottom:15px;
   background-size: cover;
   background-position-y: center;
@@ -124,23 +263,26 @@ p {
   width: 100%;
   }
   .header-background {
-    background-image: url('../images/example_img1_1200x465.jpg');
+    background-image: url('../images/plus8background.jpg');
   }
   .header-frost {
     background-color: #eee;
     opacity: 0.7;
     position: absolute;
-    top: 64px;
+    top: 54px;
+    @media screen and (min-width: 768px) {
+      top: 141px;
+    }
   }
   .container {
     margin-top: -470px;
     height: 450px;
     #block-block-9 {
-      font-weight: 500;
+      font-weight: 600;
       p {
         font-size: 1.3em;
         text-shadow: 2px 2px 15px #fff;
-        font-family: "Helvetica Neue";
+        // font-family: "Helvetica Neue";
       }
       h2 {
         text-shadow: 2px 2px 15px #fff;
@@ -152,13 +294,63 @@ p {
   }
 }
 .logged-in #page-header .header-frost {
-  top: 128px;
+  top: 84px;
+  @media screen and (min-width: 768px) {
+    top: 171px;
+  }
 }
 .main-container {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
-.front .main-container .panels-bootstrap-bootstrap_2_columns {
-  padding-bottom: 20px;
+.front {
+  .main-container .panels-bootstrap-bootstrap_2_columns {
+    padding-bottom: 20px;
+  }
+  .submitted-by {
+    display: none;
+  }
+  .field-name-field-image img {
+    padding-top: 20px;
+  }
+  .field-name-body {
+    a {
+      font-family: "Titillium Web";
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+    h3 {
+      margin-top: 30px;
+    }
+    .readmore {
+      margin-top: -15px;
+    }
+  }
+}
+
+aside {
+  background-color: #f5f5f5;
+}
+.region-sidebar-second {
+  padding: 20px 0;
+  h2.block-title {
+    padding-bottom: 20px;
+    border-bottom: 3px solid @brand-primary;
+    text-align: center;
+  }
+  .views-field-title-field-et h3 {
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 10px;
+    a {
+      color: #696969;
+    }
+    a:hover {
+      color: @brand-primary;
+    }
+  }
+  div.views-row:hover a {
+    color: @brand-primary;
+  }
 }
 
 /*Landing pages*/
@@ -166,28 +358,19 @@ p {
     margin-top: -13px;
     margin-bottom: 0;
     padding-top: 13px;
-  .views-bootstrap-grid-plugin-style {
-    h3 {
-      background-color: @brand-primary;
-      border-radius: 0 0 10px 10px;
-      margin-top: 0;
-      padding: 10px;
+    h2 {
+      padding-bottom: 20px;
+      margin-bottom: 0;
+      border-bottom: 3px solid @brand-primary;
       text-align: center;
-      a {
-        color: #fff;
-      }
     }
-    h3:hover {
-      background-color: #0274a5;
+    .views-field-field-image .img-rounded {
+      border-radius: none;
     }
-    .img-rounded {
-      border-radius: 10px 10px 0 0;
-    }
-  }
 }
 .page-nyheter, .page-nyheder, .page-news {
   .views-field-field-image {
-    border-radius: 10px 10px 0 0;
+    // border-radius: 10px 10px 0 0;
     float: left;
     display: inline-block;
     margin-right: 20px;
@@ -200,7 +383,7 @@ p {
     margin-bottom: 20px;
     position: relative;
   }
-  .row {
+  .main-container .row {
     margin-bottom: 30px;
     .views-field-view-node {
       padding-top: 20px;
@@ -250,7 +433,7 @@ p {
 .field-name-field-image img {
   margin: auto;
   padding-top: 20px;
-  border-radius: 6px;
+  // border-radius: 6px;
   @media (min-width: @screen-sm-min) {
     padding-top: 0;
   }
