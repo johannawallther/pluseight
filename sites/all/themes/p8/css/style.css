@@ -7701,8 +7701,7 @@ ul.secondary {
 #page-header {
   margin-bottom: 40px;
 }
-#page-header .header-background,
-#page-header .header-frost {
+#page-header .header-background {
   margin-bottom: 15px;
   background-size: cover;
   background-position-y: center;
@@ -7712,17 +7711,7 @@ ul.secondary {
 }
 #page-header .header-background {
   background-image: url('../images/plus8background.jpg');
-}
-#page-header .header-frost {
-  background-color: #eee;
-  opacity: 0.7;
-  position: absolute;
-  top: 54px;
-}
-@media screen and (min-width: 768px) {
-  #page-header .header-frost {
-    top: 141px;
-  }
+  opacity: 0.5;
 }
 #page-header .container {
   margin-top: -470px;
@@ -7741,14 +7730,6 @@ ul.secondary {
 @media (min-width: 1200px) {
   #page-header .container #block-block-9 {
     padding: 0 200px;
-  }
-}
-.logged-in #page-header .header-frost {
-  top: 118px;
-}
-@media screen and (min-width: 768px) {
-  .logged-in #page-header .header-frost {
-    top: 205px;
   }
 }
 .main-container {
