@@ -81,7 +81,7 @@
                   <div class="col-md-12">
             <?php if ($logo): ?>
               <div class="logo navbar-btn pull-left"><a href="<?php print $front_page; ?>" title="<?php print t('Home'); ?>">
-                <img src="<?php print $logo; ?>" alt="<?php print t('Home'); ?>" />
+                <img src="/sites/all/themes/p8/images/P8Logo_header.png" alt="<?php print t('Home'); ?>" />
               </a>
             </div>
             <?php endif; ?>
