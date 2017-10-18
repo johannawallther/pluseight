@@ -126,64 +126,51 @@ ul.secondary {
     }
   }
 }
-.region-navigation {
-  display: inline-block;
-  float: right;
-  #block-block-16,
-  #block-block-17 {
+.language-link {
+  display: none;
+}
+.navbar-collapse .region-navigation {
+  text-align: center;
+  padding-bottom: 10px;
+  @media screen and (min-width: 768px) {
     display: none;
-    @media screen and (min-width: 768px) {
-      display: block;
-      float: right;
-      padding: 32px 20px 32px 0;
-      a {
-        color: #696969;
-        text-transform: uppercase;
-        font-size: 0.8571em; /*12px*/
-        font-weight: 600;
-      }
-      a:hover {
-        color: @brand-primary;
-      }
-    }
   }
   #block-block-8 {
-    display: inline-block;
-    padding-top: 10px;
-    a {
-      text-transform: uppercase;
-      font-size: 0.8571em; /*12px*/
-    }
-   .btn:hover {
-    background-color: #0078ac;
-    }
-    @media screen and (min-width: 768px) {
-      // float: right;
-      padding: 28px 10px 28px 0;
+    padding-bottom: 10px;
+    a:hover {
+      color: @brand-success;
     }
   }
   #block-lang-dropdown-language {
     display: inline-block;
-    float: right;
-    padding-top: 8px;
-    @media screen and (min-width: 768px) {
-      padding: 28px 0 10px 0;
-    }
+    margin: auto;
   }
 }
-.language-link {
+.navbar-mobile-header .region-navigation {
   display: none;
-}
-// #nice-menu-2,
-// #block-nice-menus-2,
-// .region-navigation section,
-// #block-block-8 {
-//   display: inline-block;
-// }
-// #block-block-8 {
-//   background-color: #fff;
-//   float: right;
-// }
+  @media screen and (min-width: 768px) {
+    display: inline-block;
+    float: right;
+    #block-block-8 {
+      display: inline-block;
+      padding: 28px 10px 28px 0;
+      a {
+        text-transform: uppercase;
+        font-size: 0.8571em; /*12px*/
+      }
+     .btn:hover {
+      background-color: #0078ac;
+      }
+    }
+    #block-lang-dropdown-language {
+      display: inline-block;
+      float: right;
+      padding: 28px 0 10px 0;
+      }
+    }
+  }
+
+
 .page-header {
   border-bottom: none;
   margin-top: 30px;
@@ -293,7 +280,7 @@ ul.secondary {
   }
 }
 .logged-in #page-header .header-frost {
-  top: 116px;
+  top: 118px;
   @media screen and (min-width: 768px) {
     top: 205px;
   }
