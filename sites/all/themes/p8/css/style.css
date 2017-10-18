@@ -7655,8 +7655,7 @@ ul.secondary {
 }
 @media screen and (min-width: 768px) {
   .region-navigation #block-lang-dropdown-language {
-    float: none;
-    padding: 20px 0 10px 0;
+    padding: 28px 0 10px 0;
   }
 }
 .language-link {
@@ -7755,11 +7754,11 @@ ul.secondary {
   }
 }
 .logged-in #page-header .header-frost {
-  top: 84px;
+  top: 116px;
 }
 @media screen and (min-width: 768px) {
   .logged-in #page-header .header-frost {
-    top: 171px;
+    top: 205px;
   }
 }
 .main-container {
