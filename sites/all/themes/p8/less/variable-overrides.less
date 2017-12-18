@@ -138,6 +138,10 @@ ul.secondary {
     display: none;
   }
   #block-block-8 {
+    display: none;
+    @media screen and (min-width: 768px) {
+      display: block;
+    }
     padding-bottom: 10px;
     a:hover {
       color: @brand-success;
@@ -337,9 +341,10 @@ aside {
     }
   }
   .views-row {
-    min-height: 370px;
+    min-height: 270px;
     margin-bottom: 20px;
     position: relative;
+    clear: both;
   }
   .main-container .row {
     margin-bottom: 30px;

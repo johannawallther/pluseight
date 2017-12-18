@@ -7618,7 +7618,13 @@ ul.secondary {
   }
 }
 .navbar-collapse .region-navigation #block-block-8 {
+  display: none;
   padding-bottom: 10px;
+}
+@media screen and (min-width: 768px) {
+  .navbar-collapse .region-navigation #block-block-8 {
+    display: block;
+  }
 }
 .navbar-collapse .region-navigation #block-block-8 a:hover {
   color: #1b326d;
@@ -7812,9 +7818,10 @@ aside {
 .page-nyheter .views-row,
 .page-nyheder .views-row,
 .page-news .views-row {
-  min-height: 370px;
+  min-height: 270px;
   margin-bottom: 20px;
   position: relative;
+  clear: both;
 }
 .page-nyheter .main-container .row,
 .page-nyheder .main-container .row,
